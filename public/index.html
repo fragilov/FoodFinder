@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Food Finder — Tìm quán ăn ngon xung quanh bạn. Khám phá cơm, bún, phở, bánh mì, lẩu nướng gần vị trí của bạn.">
+  <meta name="theme-color" content="#D22B1F">
+  <title>Food Finder — Tìm quán ăn quanh bạn</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap&subset=vietnamese,latin" rel="stylesheet">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <!-- Leaflet MarkerCluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/map.css">
+  <link rel="stylesheet" href="assets/css/brutal.css">
+</head>
+<body class="page-map">
+  <div class="app" id="app">
+
+    <!-- ══════════════ HEADER ══════════════ -->
+    <header class="header" id="header">
+      <div class="header__brand">
+        <svg class="header__logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" fill="var(--c-primary)"/>
+          <path d="M10 20c0-4 2-8 6-8s6 4 6 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="11" r="2" fill="#fff"/>
+          <path d="M9 22h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h1 class="header__title">Food Finder</h1>
+      </div>
+
+      <!-- Filter chips (scrollable) -->
+      <div class="header__filters" id="header-filters">
+        <!-- Radius selector -->
+        <select class="radius-select" id="filter-radius" aria-label="Bán kính tìm kiếm">
+          <option value="0.5">500 m</option>
+          <option value="1" selected>1 km</option>
+          <option value="2">2 km</option>
+          <option value="3">3 km</option>
+          <option value="5">5 km</option>
+        </select>
+        <!-- Category chips rendered by JS -->
+        <div id="category-chips" role="group" aria-label="Lọc theo danh mục"></div>
+        <!-- Price level chips -->
+        <button class="chip" data-filter="price" data-value="1" id="filter-price-1">Bình dân</button>
+        <button class="chip" data-filter="price" data-value="2" id="filter-price-2">Trung bình</button>
+        <button class="chip" data-filter="price" data-value="3" id="filter-price-3">Cao cấp</button>
+        <!-- Open now chip -->
+        <button class="chip" data-filter="open" id="filter-open">
+          <span class="chip__icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg></span>
+          Đang mở
+        </button>
+      </div>
+
+      <!-- Header actions -->
+      <div class="header__actions">
+        <a href="explore.html" class="btn btn--ghost btn--sm" id="btn-explore" title="Xem danh sách dạng lưới" style="text-decoration:none">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 7h16v13H4zM8 7V4h8v3M8 12h8M8 16h5"/></svg> Khám phá
+        </a>
+        <a href="favorites.html" class="btn btn--ghost btn--sm" id="btn-fav-nav" title="Quán đã lưu" style="text-decoration:none">
+          <svg class="ui-icon ui-icon--heart-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> Đã lưu
+        </a>
+        <a href="suggest.html" class="btn btn--ghost btn--sm" id="btn-suggest-nav" title="Đề xuất quán" style="text-decoration:none">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Đề xuất
+        </a>
+        <a href="about.html" class="btn btn--ghost btn--sm" id="btn-about-nav" title="Giới thiệu" style="text-decoration:none">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Giới thiệu
+        </a>
+        <a href="admin/login.php" class="btn btn--primary btn--sm" id="btn-login-nav" title="Đăng nhập quản trị" style="text-decoration:none">
+          Quản trị
+        </a>
+        <button class="theme-toggle" id="btn-theme" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ══════════════ MAIN ══════════════ -->
+    <main class="main">
+
+      <!-- ── Sidebar (desktop) ── -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar__header">
+          <div class="sidebar__count" id="sidebar-count" aria-live="polite">
+            Đang tìm quán...
+          </div>
+          <div class="sidebar__search">
+            <svg class="sidebar__search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="7" cy="7" r="5.5"/><path d="M11 11l3.5 3.5"/>
+            </svg>
+            <input type="search" class="sidebar__search-input" id="sidebar-search"
+              placeholder="Tìm tên quán hoặc địa chỉ..." aria-label="Tìm kiếm quán ăn" autocomplete="off">
+          </div>
+        </div>
+        <div class="sidebar__list-wrap" id="sidebar-list-wrap">
+          <ul class="sidebar__list" id="sidebar-list" role="list">
+            <!-- Restaurant rows rendered by JS -->
+          </ul>
+        </div>
+      </aside>
+
+      <!-- ── Map ── -->
+      <div class="map-wrap" id="map-wrap">
+        <div id="map" role="application" aria-label="Bản đồ quán ăn"></div>
+      </div>
+    </main>
+
+    <!-- ══════════════ BOTTOM SHEET (mobile) ══════════════ -->
+    <div class="sheet sheet--peek" id="sheet">
+      <div class="sheet__handle-wrap" id="sheet-handle">
+        <div class="sheet__handle"></div>
+      </div>
+      <div class="sheet__header">
+        <div class="sheet__count" id="sheet-count" aria-live="polite">
+          Đang tìm quán...
+        </div>
+        <div class="sheet__search">
+          <svg class="sheet__search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.5"/><path d="M11 11l3.5 3.5"/>
+          </svg>
+          <input type="search" class="sheet__search-input" id="sheet-search"
+            placeholder="Tìm tên quán hoặc địa chỉ..." aria-label="Tìm kiếm quán ăn" autocomplete="off">
+        </div>
+      </div>
+      <div class="sheet__list-wrap" id="sheet-list-wrap">
+        <ul class="sheet__list" id="sheet-list" role="list">
+          <!-- Restaurant rows rendered by JS -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════ FAB RANDOMIZER ══════════════ -->
+    <button class="fab-random" id="btn-random" aria-label="Hôm nay ăn gì?">
+      <span class="fab-random__icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h3c4.5 0 5.5 12 10 12h3"/><path d="m18 15 3 3-3 3M4 18h3c1.7 0 2.8-1.7 3.8-3.8M15.2 9.8C16.2 7.7 17.3 6 19 6h2"/><path d="m18 3 3 3-3 3"/></svg></span>
+      <span>Hôm nay ăn gì?</span>
+    </button>
+
+    <!-- ══════════════ RANDOMIZER OVERLAY ══════════════ -->
+    <div class="random-overlay" id="random-overlay" role="dialog" aria-modal="true" aria-label="Gợi ý quán ăn">
+      <div class="random-card" id="random-card">
+        <img class="random-card__img" id="random-img" src="" alt="" loading="lazy" width="420" height="236">
+        <div class="random-card__body">
+          <div class="random-card__label">Ăn ở đây đi</div>
+          <h2 class="random-card__name" id="random-name"></h2>
+          <div class="random-card__meta" id="random-meta"></div>
+          <div class="random-card__actions">
+            <a class="btn btn--primary" id="random-directions" href="#" target="_blank" rel="noopener noreferrer">
+              Chỉ đường
+            </a>
+            <button class="btn btn--ghost" id="random-reroll">
+              Chọn lại
+            </button>
+            <button class="btn btn--ghost" id="random-close">
+              Đóng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TOAST CONTAINER ══════════════ -->
+    <div class="toast-container" id="toast-container" aria-live="status"></div>
+
+  </div><!-- /.app -->
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Leaflet MarkerCluster JS -->
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+  <!-- App JS (ES modules) -->
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

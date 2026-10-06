@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Thông tin chi tiết quán ăn — Food Finder. Xem địa chỉ, giờ mở cửa, đánh giá và chỉ đường.">
+  <meta name="theme-color" content="#D22B1F">
+  <title id="page-title">Quán ăn — Food Finder</title>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap&subset=vietnamese,latin" rel="stylesheet">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/brutal.css">
+</head>
+<body>
+
+  <!-- ══ NAV ══ -->
+  <nav class="page-nav" id="page-nav">
+    <a href="index.html" class="page-nav__brand" aria-label="Food Finder trang chủ">
+      <svg class="page-nav__logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" fill="var(--c-primary)"/>
+        <path d="M10 20c0-4 2-8 6-8s6 4 6 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="2" fill="#fff"/>
+        <path d="M9 22h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Food Finder
+    </a>
+    <div class="page-nav__links">
+      <a href="index.html" class="page-nav__link"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 5.5 8 3l5 2.5L21 3v15.5l-8 2.5-5-2.5L3 21V5.5Z"/><path d="M8 3v15.5M13 5.5V21"/></svg> Bản đồ</a>
+      <a href="explore.html" class="page-nav__link"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 7h16v13H4zM8 7V4h8v3M8 12h8M8 16h5"/></svg> Khám phá</a>
+      <a href="favorites.html" class="page-nav__link"><svg class="ui-icon ui-icon--heart-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> Đã lưu</a>
+      <a href="suggest.html" class="page-nav__link"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Đề xuất</a>
+      <a href="about.html" class="page-nav__link"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Giới thiệu</a>
+      <a href="admin/index.php" class="page-nav__link"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3m10-10h-3M5 12H2m17.1-7.1-2.1 2.1M7 17l-2.1 2.1m14.2 0L17 17M7 7 4.9 4.9"/></svg> Admin</a>
+    </div>
+    <div class="page-nav__action">
+      <a href="admin/login.php" class="btn btn--primary btn--sm">Quản trị</a>
+    </div>
+    <button class="theme-toggle" id="btn-theme" aria-label="Đổi giao diện" title="Đổi giao diện"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"/></svg></button>
+  </nav>
+
+  <!-- ══ HERO ══ -->
+  <section class="restaurant-hero" id="restaurant-hero" aria-label="Ảnh quán ăn">
+    <img class="restaurant-hero__img" id="hero-img" src="assets/img/placeholder.webp" alt="" width="1200" height="400">
+    <div class="restaurant-hero__overlay"></div>
+    <a href="explore.html" class="restaurant-hero__back" aria-label="Quay lại danh sách"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></a>
+    <div class="restaurant-hero__info">
+      <h1 class="restaurant-hero__name" id="hero-name">Đang tải...</h1>
+      <div class="restaurant-hero__badges" id="hero-badges"></div>
+    </div>
+  </section>
+
+  <!-- ══ CONTENT ══ -->
+  <div class="restaurant-content" id="restaurant-content">
+
+    <!-- ── Left column ── -->
+    <div>
+
+      <!-- Action buttons -->
+      <div class="restaurant-actions" id="restaurant-actions">
+        <a class="btn btn--primary" id="btn-directions" href="#" target="_blank" rel="noopener noreferrer">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 5c0 2-2 4-4 4s-4-2-4-4 2-3 4-3 4 1 4 3ZM8 19c0 2-2 3-4 3s-4-1-4-3 2-4 4-4 4 2 4 4Z"/><path d="M4 15c0-7 12 2 12-6"/></svg> Chỉ đường
+        </a>
+        <a class="btn btn--ghost" id="btn-call" href="#">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 3h3l1.3 4-2 1.5c1.2 2.4 2.9 4.1 5.3 5.3l1.5-2 4 1.3v3c0 1.1-.9 2-2 2C10.3 18.1 5.9 13.7 5.9 8A2 2 0 0 1 7 3Z"/></svg> Gọi điện
+        </a>
+        <button class="btn btn--ghost" id="btn-fav" aria-label="Lưu quán">
+          <svg class="ui-icon" id="fav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span id="fav-text">Lưu quán</span>
+        </button>
+        <button class="btn btn--ghost" id="btn-share" aria-label="Chia sẻ">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg> Chia sẻ
+        </button>
+      </div>
+
+      <!-- About -->
+      <div class="info-card" id="card-about">
+        <div class="info-card__title">Thông tin quán</div>
+        <div id="info-rows"><!-- rendered by JS --></div>
+      </div>
+
+      <!-- Gallery -->
+      <div class="info-card" id="card-gallery">
+        <div class="info-card__title">Hình ảnh</div>
+        <div class="gallery" id="gallery"><!-- rendered by JS --></div>
+      </div>
+
+      <!-- Reviews -->
+      <div class="info-card" id="card-reviews">
+        <div class="info-card__title">Đánh giá của khách hàng</div>
+        <div class="rating-summary" id="rating-summary"><!-- rendered by JS --></div>
+        <div id="review-list"><!-- rendered by JS --></div>
+      </div>
+
+    </div>
+
+    <!-- ── Right column ── -->
+    <div>
+
+      <!-- Mini map -->
+      <div class="mini-map" id="mini-map" role="application" aria-label="Bản đồ vị trí quán"></div>
+
+      <!-- Nearby suggestions -->
+      <div class="info-card" id="card-nearby">
+        <div class="info-card__title">Quán gần đây</div>
+        <div id="nearby-list"><!-- rendered by JS --></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container" aria-live="status"></div>
+
+  <!-- Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script type="module" src="assets/js/restaurant.js"></script>
+</body>
+</html>

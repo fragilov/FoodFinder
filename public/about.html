@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Giới thiệu về dự án Food Finder — Nền tảng tìm kiếm quán ăn thông minh quanh bạn. Tìm hiểu công nghệ, thuật toán Haversine và hướng dẫn sử dụng.">
+  <meta name="theme-color" content="#D22B1F">
+  <title>Giới thiệu & Hướng dẫn — Food Finder</title>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap&subset=vietnamese,latin" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/brutal.css">
+</head>
+<body class="page-about">
+
+  <!-- ══ NAV ══ -->
+  <nav class="page-nav" id="page-nav">
+    <a href="index.html" class="page-nav__brand" aria-label="Food Finder trang chủ">
+      <svg class="page-nav__logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" fill="var(--c-primary)"/>
+        <path d="M10 20c0-4 2-8 6-8s6 4 6 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="2" fill="#fff"/>
+        <path d="M9 22h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Food Finder
+    </a>
+
+    <div class="page-nav__links">
+      <a href="index.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 5.5 8 3l5 2.5L21 3v15.5l-8 2.5-5-2.5L3 21V5.5Z"/><path d="M8 3v15.5M13 5.5V21"/></svg> Bản đồ
+      </a>
+      <a href="explore.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 7h16v13H4zM8 7V4h8v3M8 12h8M8 16h5"/></svg> Khám phá
+      </a>
+      <a href="favorites.html" class="page-nav__link">
+        <svg class="ui-icon ui-icon--heart-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> Đã lưu
+      </a>
+      <a href="suggest.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Đề xuất
+      </a>
+      <a href="about.html" class="page-nav__link page-nav__link--active" aria-current="page">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Giới thiệu
+      </a>
+      <a href="admin/index.php" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3m10-10h-3M5 12H2m17.1-7.1-2.1 2.1M7 17l-2.1 2.1m14.2 0L17 17M7 7 4.9 4.9"/></svg> Admin
+      </a>
+    </div>
+
+    <div class="page-nav__action">
+      <a href="admin/login.php" class="btn btn--primary btn--sm">Quản trị</a>
+    </div>
+
+    <button class="theme-toggle" id="btn-theme" aria-label="Đổi giao diện" title="Đổi giao diện">
+      <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"/></svg>
+    </button>
+  </nav>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <main style="max-width: 1080px; margin: 0 auto; padding: var(--sp-6) var(--sp-5);">
+
+    <!-- Hero banner -->
+    <header style="text-align: center; padding: var(--sp-6) 0 var(--sp-6); border-bottom: 2px solid var(--c-border); margin-bottom: var(--sp-6);">
+      <span class="badge badge--category" style="margin-bottom: var(--sp-3); font-size: var(--fs-sm);">Đồ án môn học Web Development</span>
+      <h1 style="font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.15; margin-bottom: var(--sp-3);">
+        Food Finder
+      </h1>
+      <p style="font-size: var(--fs-lg); color: var(--c-ink-soft); max-width: 680px; margin: 0 auto;">
+        Nền tảng tìm kiếm quán ăn thông minh quanh bạn. Giải quyết câu hỏi muôn thuở <strong style="color:var(--c-primary);">"Hôm nay ăn gì?"</strong> bằng bản đồ tương tác và thuật toán định vị thực tế.
+      </p>
+    </header>
+
+    <!-- Mission & Story -->
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sp-5); margin-bottom: var(--sp-7);">
+      <div class="info-card" style="margin-bottom: 0;">
+        <div class="info-card__title">🎯 Mục tiêu & Động lực</div>
+        <p style="color: var(--c-ink); line-height: 1.6; margin-bottom: var(--sp-3);">
+          Sinh viên và người đi làm thường xuyên mất từ 15–30 phút mỗi ngày chỉ để suy nghĩ xem trưa nay hay tối nay ăn ở đâu. Các ứng dụng hiện tại thường nặng nề, đòi hỏi tài khoản hoặc chỉ tập trung vào đặt đơn giao hàng đắt đỏ.
+        </p>
+        <p style="color: var(--c-ink-soft); line-height: 1.6;">
+          <strong>Food Finder</strong> ra đời với tiêu chí: mở lên là thấy ngay quán quanh mình trong bán kính đi bộ hoặc xe máy, thao tác tức thì không cần đăng nhập, kết quả chính xác và chân thực.
+        </p>
+      </div>
+
+      <div class="info-card" style="margin-bottom: 0;">
+        <div class="info-card__title">⚡ Triết lý thiết kế</div>
+        <p style="color: var(--c-ink); line-height: 1.6; margin-bottom: var(--sp-3);">
+          <strong>"Men sứ & biển hiệu"</strong>: Lấy cảm hứng từ nét đẹp ẩm thực đường phố Việt Nam — tô sứ trắng men, biển hiệu sơn đỏ son, danh mục món ăn gần gũi như Cơm tấm, Bún bò, Bánh mì, Phở, Cà phê.
+        </p>
+        <p style="color: var(--c-ink-soft); line-height: 1.6;">
+          Giao diện được thiết kế theo phong cách Brutalism hiện đại: tương phản cao, typography đậm cá tính, thao tác dứt khoát và tối ưu hóa tối đa cho thiết bị di động.
+        </p>
+      </div>
+    </section>
+
+    <!-- 4 Core Features -->
+    <section style="margin-bottom: var(--sp-7);">
+      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: var(--sp-4);">4 Trụ Cột Công Nghệ</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--sp-4);">
+        <div class="info-card" style="margin-bottom: 0; border-top: 4px solid var(--c-primary);">
+          <div style="font-size: 1.8rem; margin-bottom: var(--sp-2);">🗺️</div>
+          <h3 style="font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-2);">Bản Đồ Số Leaflet</h3>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft); line-height: 1.5;">
+            Tích hợp bản đồ OpenStreetMap & Carto Voyager thông qua thư viện Leaflet.js mã nguồn mở, hiển thị marker giọt nước độc quyền và bán kính quét trực quan.
+          </p>
+        </div>
+
+        <div class="info-card" style="margin-bottom: 0; border-top: 4px solid var(--c-accent);">
+          <div style="font-size: 1.8rem; margin-bottom: var(--sp-2);">📐</div>
+          <h3 style="font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-2);">Công Thức Haversine</h3>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft); line-height: 1.5;">
+            Tính toán cự ly thực tế trên bề mặt hình cầu Trái Đất (R = 6371.0088 km). Kết hợp kỹ thuật Bounding Box giúp lọc nhanh tọa độ trước khi tính lượng giác.
+          </p>
+        </div>
+
+        <div class="info-card" style="margin-bottom: 0; border-top: 4px solid var(--c-open);">
+          <div style="font-size: 1.8rem; margin-bottom: var(--sp-2);">🎲</div>
+          <h3 style="font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-2);">Quay Quán Thông Minh</h3>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft); line-height: 1.5;">
+            Tính năng "Hôm nay ăn gì?" áp dụng thuật toán chọn ngẫu nhiên có trọng số: ưu tiên quán gần hơn và có điểm đánh giá cao hơn, loại trừ trùng lặp gần nhất.
+          </p>
+        </div>
+
+        <div class="info-card" style="margin-bottom: 0; border-top: 4px solid var(--c-user);">
+          <div style="font-size: 1.8rem; margin-bottom: var(--sp-2);">🔍</div>
+          <h3 style="font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-2);">Lọc Nâng Cao Đa Chiều</h3>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft); line-height: 1.5;">
+            Lọc linh hoạt theo bán kính (0.5km, 1km, 2km, 3km, 5km), danh mục món ăn, phân khúc giá sinh viên / cao cấp, số sao đánh giá và giờ mở cửa hiện tại.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formula breakdown -->
+    <section class="info-card" style="margin-bottom: var(--sp-7); padding: var(--sp-6);">
+      <div class="info-card__title" style="font-size: 1.25rem;">🔬 Chi Tiết Công Thức Toán & Thuật Toán Ứng Dụng</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--sp-5);">
+        <div>
+          <h4 style="font-weight: 700; color: var(--c-primary); margin-bottom: var(--sp-2);">1. Công thức Haversine (Khoảng cách km)</h4>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft); margin-bottom: var(--sp-3);">
+            Tính khoảng cách giữa tọa độ người dùng $(lat_1, lng_1)$ và tọa độ quán ăn $(lat_2, lng_2)$:
+          </p>
+          <pre style="background: var(--c-surface-sunk); padding: var(--sp-3); border-radius: var(--r-sm); font-size: var(--fs-xs); overflow-x: auto; line-height: 1.5;">
+Δφ = (lat₂ - lat₁) × π / 180
+Δλ = (lng₂ - lng₁) × π / 180
+a  = sin²(Δφ/2) + cos(φ₁)·cos(φ₂)·sin²(Δλ/2)
+c  = 2 · asin(√a)
+d  = 6371.0088 · c  (km)</pre>
+        </div>
+        <div>
+          <h4 style="font-weight: 700; color: var(--c-accent-dark); margin-bottom: var(--sp-2);">2. Trọng số "Hôm nay ăn gì?" (Weighted Pick)</h4>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft); margin-bottom: var(--sp-3);">
+            Trọng số của quán $i$ được tính theo điểm đánh giá và khoảng cách suy giảm:
+          </p>
+          <pre style="background: var(--c-surface-sunk); padding: var(--sp-3); border-radius: var(--r-sm); font-size: var(--fs-xs); overflow-x: auto; line-height: 1.5;">
+wᵢ = (0.30 + ratingᵢ / 5) × e^(-dᵢ / 1.5)
+
+• 0.30: Đảm bảo quán mới vẫn có cơ hội trúng
+• rating/5: Ưu tiên quán được đánh giá cao
+• e^(-d/1.5): Quán càng gần tỉ lệ trúng càng cao</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- User Guide -->
+    <section style="margin-bottom: var(--sp-7);">
+      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: var(--sp-4);">Hướng Dẫn Sử Dụng Nhanh</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--sp-4);">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); padding: var(--sp-4); border-radius: var(--r-md); box-shadow: var(--sh-1);">
+          <div style="width: 32px; height: 32px; background: var(--c-primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: var(--sp-3);">1</div>
+          <h3 style="font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-2);">Xác định vị trí</h3>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft);">Cho phép ứng dụng lấy GPS hoặc chạm vào bản đồ để chọn bất kỳ vị trí xuất phát nào bạn muốn.</p>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); padding: var(--sp-4); border-radius: var(--r-md); box-shadow: var(--sh-1);">
+          <div style="width: 32px; height: 32px; background: var(--c-primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: var(--sp-3);">2</div>
+          <h3 style="font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-2);">Chọn bán kính & món</h3>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft);">Chọn bán kính (500m - 5km) và bấm vào các chip danh mục (Cơm, Bún/Phở, Bánh mì...) để lọc nhanh.</p>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); padding: var(--sp-4); border-radius: var(--r-md); box-shadow: var(--sh-1);">
+          <div style="width: 32px; height: 32px; background: var(--c-primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: var(--sp-3);">3</div>
+          <h3 style="font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-2);">Xem hoặc Quay quán</h3>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft);">Bấm vào từng quán trong danh sách hoặc bấm nút vàng to "Hôm nay ăn gì?" để máy chọn giúp bạn.</p>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); padding: var(--sp-4); border-radius: var(--r-md); box-shadow: var(--sh-1);">
+          <div style="width: 32px; height: 32px; background: var(--c-primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: var(--sp-3);">4</div>
+          <h3 style="font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-2);">Chỉ đường & Lưu quán</h3>
+          <p style="font-size: var(--fs-sm); color: var(--c-ink-soft);">Nhấn nút "Chỉ đường" để mở Google Maps điều hướng, hoặc thả tim lưu lại quán để ghé lần sau.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Specs -->
+    <section class="info-card" style="margin-bottom: var(--sp-7);">
+      <div class="info-card__title">💻 Kiến Trúc Công Nghệ</div>
+      <table style="width: 100%; border-collapse: collapse; font-size: var(--fs-sm);">
+        <tr style="border-bottom: 1px solid var(--c-border);">
+          <td style="padding: var(--sp-3) 0; font-weight: 700; width: 220px; color: var(--c-ink);">Frontend Core</td>
+          <td style="padding: var(--sp-3) 0; color: var(--c-ink-soft);">HTML5 Semantic, CSS3 Vanilla (Tokens & Custom Properties), ES6 Javascript Modules</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--c-border);">
+          <td style="padding: var(--sp-3) 0; font-weight: 700; color: var(--c-ink);">Thư viện Bản đồ</td>
+          <td style="padding: var(--sp-3) 0; color: var(--c-ink-soft);">Leaflet.js 1.9.4, Leaflet.markercluster, Carto Voyager & OpenStreetMap Tiles</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--c-border);">
+          <td style="padding: var(--sp-3) 0; font-weight: 700; color: var(--c-ink);">Backend API</td>
+          <td style="padding: var(--sp-3) 0; color: var(--c-ink-soft);">PHP 8.x, PDO Prepared Statements, RESTful JSON, Quản lý phiên Session & CSRF Token</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--c-border);">
+          <td style="padding: var(--sp-3) 0; font-weight: 700; color: var(--c-ink);">Cơ sở dữ liệu</td>
+          <td style="padding: var(--sp-3) 0; color: var(--c-ink-soft);">MySQL / MariaDB (InnoDB, UTF8mb4 Unicode), Composite Indexing cho tọa độ địa lý</td>
+        </tr>
+        <tr>
+          <td style="padding: var(--sp-3) 0; font-weight: 700; color: var(--c-ink);">Khả năng chạy độc lập</td>
+          <td style="padding: var(--sp-3) 0; color: var(--c-ink-soft);">Tự động chuyển đổi giữa chế độ Live Backend API và chế độ Mock Web tĩnh (Client-side Haversine)</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- Footer info -->
+    <footer style="text-align: center; padding: var(--sp-5) 0; border-top: 1px solid var(--c-border); color: var(--c-ink-faint); font-size: var(--fs-xs);">
+      <p>© 2026 Food Finder — Đồ án Phát triển Ứng dụng Web. Khu vực thử nghiệm: Quận 7, TP. Hồ Chí Minh.</p>
+    </footer>
+
+  </main>
+
+  <script>
+    // Theme toggle
+    const btnTheme = document.getElementById('btn-theme');
+    const root = document.documentElement;
+    function applyTheme(theme) {
+      root.dataset.theme = theme;
+      if (btnTheme) btnTheme.innerHTML = theme === 'dark'
+        ? '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+        : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"/></svg>';
+      localStorage.setItem('ff-theme', theme);
+    }
+    const savedTheme = localStorage.getItem('ff-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    if (btnTheme) btnTheme.addEventListener('click', () => {
+      applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+    });
+  </script>
+</body>
+</html>

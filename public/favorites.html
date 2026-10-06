@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Danh sách quán ăn đã lưu — Food Finder. Xem lại các địa điểm ẩm thực yêu thích, thông tin mở cửa và chỉ đường nhanh chóng.">
+  <meta name="theme-color" content="#D22B1F">
+  <title>Quán ăn đã lưu — Food Finder</title>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap&subset=vietnamese,latin" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/brutal.css">
+</head>
+<body class="page-favorites">
+
+  <!-- ══ NAV ══ -->
+  <nav class="page-nav" id="page-nav">
+    <a href="index.html" class="page-nav__brand" aria-label="Food Finder trang chủ">
+      <svg class="page-nav__logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" fill="var(--c-primary)"/>
+        <path d="M10 20c0-4 2-8 6-8s6 4 6 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="2" fill="#fff"/>
+        <path d="M9 22h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Food Finder
+    </a>
+
+    <div class="page-nav__links">
+      <a href="index.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 5.5 8 3l5 2.5L21 3v15.5l-8 2.5-5-2.5L3 21V5.5Z"/><path d="M8 3v15.5M13 5.5V21"/></svg> Bản đồ
+      </a>
+      <a href="explore.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 7h16v13H4zM8 7V4h8v3M8 12h8M8 16h5"/></svg> Khám phá
+      </a>
+      <a href="favorites.html" class="page-nav__link page-nav__link--active" aria-current="page">
+        <svg class="ui-icon ui-icon--heart-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> Đã lưu
+      </a>
+      <a href="suggest.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Đề xuất
+      </a>
+      <a href="about.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Giới thiệu
+      </a>
+      <a href="admin/index.php" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3m10-10h-3M5 12H2m17.1-7.1-2.1 2.1M7 17l-2.1 2.1m14.2 0L17 17M7 7 4.9 4.9"/></svg> Admin
+      </a>
+    </div>
+
+    <div class="page-nav__action">
+      <a href="admin/login.php" class="btn btn--primary btn--sm">Quản trị</a>
+    </div>
+
+    <button class="theme-toggle" id="btn-theme" aria-label="Đổi giao diện" title="Đổi giao diện">
+      <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"/></svg>
+    </button>
+  </nav>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <main class="page-container" style="max-width: 1200px; margin: 0 auto; padding: var(--sp-6) var(--sp-5);">
+
+    <!-- Header section -->
+    <div class="page-header" style="margin-bottom: var(--sp-6);">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: var(--sp-3);">
+        <div>
+          <span class="badge badge--category" style="margin-bottom: var(--sp-2);">Mục yêu thích</span>
+          <h1 style="font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.5rem); margin: 0;">Quán Ăn Đã Lưu</h1>
+          <p style="color: var(--c-ink-soft); margin-top: var(--sp-2);">Lưu lại những địa điểm ẩm thực ngon để dễ dàng xem lại, gọi điện và chỉ đường.</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--sp-3);">
+          <span class="badge" id="favorites-count" style="font-size: var(--fs-md); padding: 6px 14px; background: var(--c-surface); border: 1px solid var(--c-border); font-weight: 700;">Đang tải...</span>
+          <button class="btn btn--ghost btn--sm" id="btn-clear-all" style="color: var(--c-primary); display: none;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Xóa tất cả
+          </button>
+        </div>
+      </div>
+
+      <!-- Toolbar filter -->
+      <div class="fav-toolbar" style="display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); padding: var(--sp-3) var(--sp-4); background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); box-shadow: var(--sh-1);">
+        <div style="flex: 1; min-width: 220px; position: relative;">
+          <input type="text" id="search-favorites" class="search-input" placeholder="Tìm theo tên quán, địa chỉ..."
+            style="width: 100%; height: 40px; padding: 0 var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);">
+        </div>
+        <div style="min-width: 200px;">
+          <select id="filter-category" class="filter-select"
+            style="width: 100%; height: 40px; padding: 0 var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink); cursor: pointer;">
+            <option value="">Tất cả danh mục</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="favorites-empty" style="display: none; text-align: center; padding: var(--sp-7) var(--sp-4); background: var(--c-surface); border: 2px dashed var(--c-border); border-radius: var(--r-lg); margin-top: var(--sp-5);">
+      <div style="width: 72px; height: 72px; margin: 0 auto var(--sp-4); background: var(--c-primary-tint); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--c-primary);">
+        <svg class="ui-icon" style="width: 36px; height: 36px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      <h2 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: var(--sp-2);">Bạn chưa lưu quán ăn nào</h2>
+      <p style="color: var(--c-ink-soft); max-width: 480px; margin: 0 auto var(--sp-5);">Hãy khám phá bản đồ hoặc danh sách món ăn, bấm vào biểu tượng trái tim để lưu lại các địa điểm bạn muốn thưởng thức sau!</p>
+      <div style="display: flex; gap: var(--sp-3); justify-content: center; flex-wrap: wrap;">
+        <a href="index.html" class="btn btn--primary">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg> Khám phá trên Bản đồ
+        </a>
+        <a href="explore.html" class="btn btn--secondary">
+          Xem danh sách quán ăn
+        </a>
+      </div>
+    </div>
+
+    <!-- Favorites Grid -->
+    <div id="favorites-list" class="fav-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--sp-5);">
+      <!-- Rendered by JS -->
+    </div>
+
+  </main>
+
+  <script type="module" src="assets/js/favorites.js"></script>
+</body>
+</html>

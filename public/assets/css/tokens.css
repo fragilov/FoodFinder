@@ -1,0 +1,141 @@
+/* ============================================================
+   TOKENS.CSS — Biến CSS cho Food Finder
+   Theme: "Men sứ & biển hiệu" — hàng quán vỉa hè Việt Nam
+   ============================================================ */
+
+:root {
+  /* ── Nền & bề mặt — trắng men sứ ngả xanh lạnh ── */
+  --c-bg:            #F1F3F0;
+  --c-surface:       #FFFFFF;
+  --c-surface-sunk:  #E7EAE6;
+  --c-border:        #D3D8D2;
+  --c-border-strong: #B4BCB3;
+
+  /* ── Chữ — đen ngả xanh lá ── */
+  --c-ink:           #15201B;
+  --c-ink-soft:      #46544C;
+  --c-ink-faint:     #7A867F;
+
+  /* ── Hành động chính — đỏ sơn biển hiệu ── */
+  --c-primary:       #D22B1F;
+  --c-primary-dark:  #A81D14;
+  --c-primary-tint:  #FBE7E4;
+
+  /* ── Điểm nhấn — vàng nghệ (randomizer + sao) ── */
+  --c-accent:        #F2B01B;
+  --c-accent-dark:   #C88C06;
+
+  /* ── Trạng thái ── */
+  --c-open:          #14705A;
+  --c-open-tint:     #DFF0EA;
+  --c-closed:        #8A6A1F;
+  --c-closed-tint:   #FDF5E0;
+  --c-user:          #1E6FA8;
+
+  /* ── Đổ bóng — ám xanh lá tối ── */
+  --sh-1: 0 1px 2px rgba(21, 32, 27, .08);
+  --sh-2: 0 4px 14px rgba(21, 32, 27, .12);
+  --sh-3: 0 12px 32px rgba(21, 32, 27, .18);
+
+  /* ── Typography ── */
+  --font-display: "Bricolage Grotesque", "Be Vietnam Pro", system-ui, sans-serif;
+  --font-ui: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-xs:  0.75rem;    /* 12px — nhãn phụ, khoảng giá */
+  --fs-sm:  0.875rem;   /* 14px — meta, mô tả */
+  --fs-md:  1rem;       /* 16px — nội dung mặc định */
+  --fs-lg:  1.125rem;   /* 18px — tên quán trong danh sách */
+  --fs-xl:  1.5rem;     /* 24px — tiêu đề sheet */
+  --fs-2xl: 2rem;       /* 32px — số kết quả, tên quán randomizer */
+
+  --lh-tight: 1.2;
+  --lh-body:  1.55;
+
+  /* ── Spacing ── */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+
+  /* ── Border radius ── */
+  --r-sm:   6px;       /* chip, badge */
+  --r-md:   10px;      /* ảnh quán, input */
+  --r-lg:   18px;      /* bottom sheet, randomizer card */
+  --r-full: 999px;
+
+  /* ── Vùng chạm tối thiểu ── */
+  --tap: 44px;
+
+  /* ── Transition ── */
+  --ease-out: 160ms ease-out;
+  --ease-sheet: 240ms cubic-bezier(.32, .72, 0, 1);
+
+  /* ── Layout ── */
+  --header-h: 64px;
+  --header-h-mobile: 56px;
+  --sidebar-w: 380px;
+  --sidebar-w-xl: 420px;
+}
+
+/* ── Dark mode — data attribute ── */
+[data-theme="dark"] {
+  --c-bg:            #101512;
+  --c-surface:       #19201C;
+  --c-surface-sunk:  #232B26;
+  --c-border:        #2E3832;
+  --c-border-strong: #44514A;
+
+  --c-ink:           #E8EDE9;
+  --c-ink-soft:      #A9B4AD;
+  --c-ink-faint:     #7A867F;
+
+  --c-primary:       #FF6A54;
+  --c-primary-dark:  #E04E38;
+  --c-primary-tint:  #2B1A16;
+
+  --c-accent:        #FFC93F;
+  --c-accent-dark:   #D49D12;
+
+  --c-open:          #4BBD98;
+  --c-open-tint:     #14302A;
+  --c-closed:        #C9A84E;
+  --c-closed-tint:   #2A2414;
+
+  --sh-1: 0 1px 2px rgba(0, 0, 0, .5);
+  --sh-2: 0 4px 14px rgba(0, 0, 0, .55);
+  --sh-3: 0 12px 32px rgba(0, 0, 0, .6);
+}
+
+/* ── Dark mode — system preference fallback ── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-bg:            #101512;
+    --c-surface:       #19201C;
+    --c-surface-sunk:  #232B26;
+    --c-border:        #2E3832;
+    --c-border-strong: #44514A;
+
+    --c-ink:           #E8EDE9;
+    --c-ink-soft:      #A9B4AD;
+    --c-ink-faint:     #7A867F;
+
+    --c-primary:       #FF6A54;
+    --c-primary-dark:  #E04E38;
+    --c-primary-tint:  #2B1A16;
+
+    --c-accent:        #FFC93F;
+    --c-accent-dark:   #D49D12;
+
+    --c-open:          #4BBD98;
+    --c-open-tint:     #14302A;
+    --c-closed:        #C9A84E;
+    --c-closed-tint:   #2A2414;
+
+    --sh-1: 0 1px 2px rgba(0, 0, 0, .5);
+    --sh-2: 0 4px 14px rgba(0, 0, 0, .55);
+    --sh-3: 0 12px 32px rgba(0, 0, 0, .6);
+  }
+}

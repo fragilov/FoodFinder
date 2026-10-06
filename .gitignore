@@ -1,0 +1,16 @@
+# Config & Cache
+app/config.php
+app/cache/
+
+# Uploads (keep directory structure)
+public/uploads/restaurants/*
+!public/uploads/restaurants/.htaccess
+!public/uploads/restaurants/.gitkeep
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log

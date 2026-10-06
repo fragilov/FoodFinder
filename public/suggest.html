@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Đề xuất quán ăn mới — Food Finder. Đóng góp địa điểm ẩm thực yêu thích của bạn cho cộng đồng thực khách.">
+  <meta name="theme-color" content="#D22B1F">
+  <title>Đề xuất quán ăn mới — Food Finder</title>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap&subset=vietnamese,latin" rel="stylesheet">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/brutal.css">
+</head>
+<body class="page-suggest">
+
+  <!-- ══ NAV ══ -->
+  <nav class="page-nav" id="page-nav">
+    <a href="index.html" class="page-nav__brand" aria-label="Food Finder trang chủ">
+      <svg class="page-nav__logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" fill="var(--c-primary)"/>
+        <path d="M10 20c0-4 2-8 6-8s6 4 6 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="2" fill="#fff"/>
+        <path d="M9 22h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Food Finder
+    </a>
+
+    <div class="page-nav__links">
+      <a href="index.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 5.5 8 3l5 2.5L21 3v15.5l-8 2.5-5-2.5L3 21V5.5Z"/><path d="M8 3v15.5M13 5.5V21"/></svg> Bản đồ
+      </a>
+      <a href="explore.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 7h16v13H4zM8 7V4h8v3M8 12h8M8 16h5"/></svg> Khám phá
+      </a>
+      <a href="favorites.html" class="page-nav__link">
+        <svg class="ui-icon ui-icon--heart-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> Đã lưu
+      </a>
+      <a href="suggest.html" class="page-nav__link page-nav__link--active" aria-current="page">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Đề xuất
+      </a>
+      <a href="about.html" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Giới thiệu
+      </a>
+      <a href="admin/index.php" class="page-nav__link">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3m10-10h-3M5 12H2m17.1-7.1-2.1 2.1M7 17l-2.1 2.1m14.2 0L17 17M7 7 4.9 4.9"/></svg> Admin
+      </a>
+    </div>
+
+    <div class="page-nav__action">
+      <a href="admin/login.php" class="btn btn--primary btn--sm">Quản trị</a>
+    </div>
+
+    <button class="theme-toggle" id="btn-theme" aria-label="Đổi giao diện" title="Đổi giao diện">
+      <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"/></svg>
+    </button>
+  </nav>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <main style="max-width: 960px; margin: 0 auto; padding: var(--sp-6) var(--sp-5);">
+
+    <header style="margin-bottom: var(--sp-6);">
+      <span class="badge badge--category" style="margin-bottom: var(--sp-2);">Đóng góp cộng đồng</span>
+      <h1 style="font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin: 0 0 var(--sp-2);">Đề Xuất Quán Ăn Mới</h1>
+      <p style="color: var(--c-ink-soft);">Bạn biết một quán ngon gần đây mà bản đồ chưa có? Hãy chia sẻ để mọi người cùng thưởng thức nhé!</p>
+    </header>
+
+    <div class="info-card" style="padding: var(--sp-6);">
+      <form id="suggest-form">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sp-4); margin-bottom: var(--sp-4);">
+          <div>
+            <label style="display: block; font-size: var(--fs-sm); font-weight: 700; margin-bottom: var(--sp-1);">Tên quán ăn <span style="color:var(--c-primary)">*</span></label>
+            <input required type="text" id="sug-name" placeholder="Ví dụ: Cơm tấm Sà Bì Chưởng"
+              style="width: 100%; height: 42px; padding: 0 var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);">
+          </div>
+          <div>
+            <label style="display: block; font-size: var(--fs-sm); font-weight: 700; margin-bottom: var(--sp-1);">Danh mục ẩm thực <span style="color:var(--c-primary)">*</span></label>
+            <select required id="sug-category"
+              style="width: 100%; height: 42px; padding: 0 var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);">
+              <option value="1">Cơm (Cơm tấm, Cơm niêu, Cơm văn phòng)</option>
+              <option value="2">Bún, Phở, Hủ tiếu, Mì Quảng</option>
+              <option value="3">Bánh mì, Xôi, Điểm tâm</option>
+              <option value="4">Lẩu, Nướng, Hải sản</option>
+              <option value="5">Ăn vặt, Bánh tráng, Chè</option>
+              <option value="6">Món chay thực dưỡng</option>
+              <option value="7">Cà phê, Trà sữa, Nước ép</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sp-4); margin-bottom: var(--sp-4);">
+          <div>
+            <label style="display: block; font-size: var(--fs-sm); font-weight: 700; margin-bottom: var(--sp-1);">Địa chỉ đầy đủ <span style="color:var(--c-primary)">*</span></label>
+            <input required type="text" id="sug-address" placeholder="Ví dụ: 86 Nguyễn Thị Thập, Phường Bình Thuận, Quận 7"
+              style="width: 100%; height: 42px; padding: 0 var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);">
+          </div>
+          <div>
+            <label style="display: block; font-size: var(--fs-sm); font-weight: 700; margin-bottom: var(--sp-1);">Số điện thoại liên hệ</label>
+            <input type="tel" id="sug-phone" placeholder="Ví dụ: 0901234567"
+              style="width: 100%; height: 42px; padding: 0 var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-4); margin-bottom: var(--sp-4);">
+          <div>
+            <label style="display: block; font-size: var(--fs-sm); font-weight: 700; margin-bottom: var(--sp-1);">Giá thấp nhất (VNĐ)</label>
+            <input type="number" id="sug-price-min" value="25000" step="5000"
+              style="width: 100%; height: 42px; padding: 0 var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);">
+          </div>
+          <div>
+            <label style="display: block; font-size: var(--fs-sm); font-weight: 700; margin-bottom: var(--sp-1);">Giá cao nhất (VNĐ)</label>
+            <input type="number" id="sug-price-max" value="50000" step="5000"
+              style="width: 100%; height: 42px; padding: 0 var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);">
+          </div>
+          <div>
+            <label style="display: block; font-size: var(--fs-sm); font-weight: 700; margin-bottom: var(--sp-1);">Giờ mở - đóng</label>
+            <div style="display: flex; gap: var(--sp-2);">
+              <input type="time" id="sug-open" value="06:30" style="flex:1; height: 42px; padding: 0 var(--sp-2); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);">
+              <input type="time" id="sug-close" value="21:30" style="flex:1; height: 42px; padding: 0 var(--sp-2); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);">
+            </div>
+          </div>
+        </div>
+
+        <!-- Map Picker -->
+        <div style="margin-bottom: var(--sp-4);">
+          <label style="display: flex; justify-content: space-between; font-size: var(--fs-sm); font-weight: 700; margin-bottom: var(--sp-1);">
+            <span>Chấm vị trí quán trên bản đồ <span style="color:var(--c-primary)">*</span></span>
+            <small style="font-weight: 400; color: var(--c-ink-faint);">Chạm/click vào bản đồ để chọn tọa độ</small>
+          </label>
+          <div id="suggest-map" style="height: 280px; border-radius: var(--r-md); border: 1px solid var(--c-border); overflow: hidden; margin-bottom: var(--sp-2);"></div>
+          <div style="display: flex; gap: var(--sp-3);">
+            <div style="flex: 1;">
+              <small style="color:var(--c-ink-faint)">Vĩ độ (Lat):</small>
+              <input readonly type="text" id="sug-lat" value="10.732600"
+                style="width: 100%; height: 36px; padding: 0 var(--sp-2); font-size: var(--fs-xs); background: var(--c-surface-sunk); border: 1px solid var(--c-border); border-radius: var(--r-sm);">
+            </div>
+            <div style="flex: 1;">
+              <small style="color:var(--c-ink-faint)">Kinh độ (Lng):</small>
+              <input readonly type="text" id="sug-lng" value="106.699600"
+                style="width: 100%; height: 36px; padding: 0 var(--sp-2); font-size: var(--fs-xs); background: var(--c-surface-sunk); border: 1px solid var(--c-border); border-radius: var(--r-sm);">
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: var(--sp-5);">
+          <label style="display: block; font-size: var(--fs-sm); font-weight: 700; margin-bottom: var(--sp-1);">Món ngon đặc trưng & Ghi chú</label>
+          <textarea id="sug-note" rows="3" placeholder="Ví dụ: Quán cơm sườn nướng mật ong rất ngon, trà đá miễn phí, có chỗ để xe máy..."
+            style="width: 100%; padding: var(--sp-2) var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-ink);"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn--primary" style="width: 100%; height: 48px; font-size: var(--fs-md); font-weight: 700;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Gửi Đề Xuất Quán
+        </button>
+      </form>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toast-container" aria-live="status"></div>
+
+  </main>
+
+  <!-- Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script>
+    // Theme toggle
+    const btnTheme = document.getElementById('btn-theme');
+    const root = document.documentElement;
+    function applyTheme(theme) {
+      root.dataset.theme = theme;
+      if (btnTheme) btnTheme.innerHTML = theme === 'dark'
+        ? '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+        : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"/></svg>';
+      localStorage.setItem('ff-theme', theme);
+    }
+    const savedTheme = localStorage.getItem('ff-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    if (btnTheme) btnTheme.addEventListener('click', () => {
+      applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+    });
+
+    // Toast
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        background:var(--c-surface);color:var(--c-ink);
+        border:1px solid var(--c-border);border-left:4px solid var(--c-primary);
+        padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);
+        box-shadow:var(--sh-2);font-size:var(--fs-sm);margin-bottom:var(--sp-2);
+      `;
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    // Leaflet map setup
+    let defaultLat = 10.7326;
+    let defaultLng = 106.6996;
+    const map = L.map('suggest-map', {
+      center: [defaultLat, defaultLng],
+      zoom: 15,
+      zoomControl: true,
+      attributionControl: false
+    });
+
+    const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19
+    }).addTo(map);
+    tileLayer.on('load', () => { window.__tilesLoaded = true; });
+
+    let marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(map);
+
+    function updateCoords(lat, lng) {
+      document.getElementById('sug-lat').value = Number(lat).toFixed(6);
+      document.getElementById('sug-lng').value = Number(lng).toFixed(6);
+    }
+
+    marker.on('dragend', function(e) {
+      const pos = e.target.getLatLng();
+      updateCoords(pos.lat, pos.lng);
+    });
+
+    map.on('click', function(e) {
+      marker.setLatLng(e.latlng);
+      updateCoords(e.latlng.lat, e.latlng.lng);
+    });
+
+    // Form submit
+    document.getElementById('suggest-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const suggestion = {
+        name: document.getElementById('sug-name').value,
+        category_id: document.getElementById('sug-category').value,
+        address: document.getElementById('sug-address').value,
+        phone: document.getElementById('sug-phone').value,
+        price_min: document.getElementById('sug-price-min').value,
+        price_max: document.getElementById('sug-price-max').value,
+        open_time: document.getElementById('sug-open').value,
+        close_time: document.getElementById('sug-close').value,
+        lat: document.getElementById('sug-lat').value,
+        lng: document.getElementById('sug-lng').value,
+        note: document.getElementById('sug-note').value,
+        created_at: new Date().toISOString()
+      };
+
+      try {
+        const list = JSON.parse(localStorage.getItem('food_finder_suggestions') || '[]');
+        list.push(suggestion);
+        localStorage.setItem('food_finder_suggestions', JSON.stringify(list));
+      } catch (_) {}
+
+      showToast('🎉 Cảm ơn bạn! Đề xuất quán đã được gửi thành công đến hệ thống.');
+      this.reset();
+      updateCoords(defaultLat, defaultLng);
+      marker.setLatLng([defaultLat, defaultLng]);
+    });
+  </script>
+</body>
+</html>
