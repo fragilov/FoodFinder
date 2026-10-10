@@ -14,8 +14,8 @@ import { icon } from './icons.js';
 
 // ══════════════ APP STATE ══════════════
 const state = {
-  user:     { lat: null, lng: null, source: 'fallback' },
-  filters:  { radius: 1, categoryId: null, priceLevel: null, minRating: null, openNow: false, q: '', sort: 'distance' },
+  user:     { lat: CONFIG.FALLBACK_LAT, lng: CONFIG.FALLBACK_LNG, source: 'fallback' },
+  filters:  { radius: CONFIG.DEFAULT_RADIUS || 3, categoryId: null, priceLevel: null, minRating: null, openNow: false, q: '', sort: 'distance' },
   results:  [],
   selectedId: null,
   sheet:    'peek',
@@ -219,35 +219,18 @@ async function bootstrap() {
     },
   });
 
-  // 5. Get user location
-  showToast('Đang tìm vị trí của bạn');
-  const pos = await getCurrentPosition();
-  state.user.lat = pos.lat;
-  state.user.lng = pos.lng;
-  state.user.source = pos.source;
+  // Đặt marker người dùng ban đầu tại vị trí mặc định (ĐH Tôn Đức Thắng)
+  setUserMarker(CONFIG.FALLBACK_LAT, CONFIG.FALLBACK_LNG);
 
-  // Place user marker
-  setUserMarker(pos.lat, pos.lng);
-
-  // Fly to user location
-  if (pos.source === 'gps') {
-    flyTo(pos.lat, pos.lng, CONFIG.FOCUS_ZOOM);
-  } else {
-    flyTo(pos.lat, pos.lng, CONFIG.DEFAULT_ZOOM + 1);
-    if (pos.error) showToast(pos.error);
-  }
-
-  // 6. Init filters
+  // 5. Init filters & interactions
   initFilters(state);
   setFilterChangeHandler(() => loadRestaurants());
-
-  // 7. Set row click handler
   setRowClickHandler((r) => selectRestaurant(r));
 
-  // 8. Load restaurants
+  // 6. Tải quán ăn NGAY TỨC THÌ (không để bản đồ bị trống trong lúc chờ GPS)
   await loadRestaurants();
 
-  // 9. Init bottom sheet (mobile)
+  // 7. Init bottom sheet (mobile)
   initSheet({
     onStateChange: (s) => {
       state.sheet = s;
@@ -260,8 +243,43 @@ async function bootstrap() {
     setTimeout(() => setSheetState('half'), 800);
   }
 
-  // 10. Bind events
+  // 8. Bind events
   bindEvents();
+
+  // 9. Xác định GPS của người dùng trong background (không chặn UI)
+  resolveUserLocation();
+}
+
+function haversineDistanceKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2
+          + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180)
+          * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+async function resolveUserLocation() {
+  const pos = await getCurrentPosition();
+  if (pos.source === 'gps') {
+    const distToTDTU = haversineDistanceKm(pos.lat, pos.lng, CONFIG.FALLBACK_LAT, CONFIG.FALLBACK_LNG);
+    if (distToTDTU <= 10) {
+      // Người dùng ở gần khu vực Quận 7 / lân cận (<= 10km) -> cập nhật vị trí thật
+      state.user.lat = pos.lat;
+      state.user.lng = pos.lng;
+      state.user.source = 'gps';
+      setUserMarker(pos.lat, pos.lng);
+      flyTo(pos.lat, pos.lng, CONFIG.FOCUS_ZOOM);
+      showToast('Đã xác định vị trí của bạn');
+      await loadRestaurants();
+    } else {
+      // Người dùng ở tỉnh thành khác hoặc quá xa (> 10km) -> giữ trung tâm Q.7
+      showToast('Vị trí của bạn ở xa khu vực trải nghiệm. Đang hiển thị các quán ăn quanh ĐH Tôn Đức Thắng (Q.7)');
+    }
+  } else if (pos.error) {
+    console.info('GPS fallback:', pos.error);
+  }
 }
 
 // ══════════════ BIND EVENTS ══════════════
@@ -276,6 +294,27 @@ function bindEvents() {
   // Randomizer
   if (btnRandom) {
     btnRandom.addEventListener('click', handleRandom);
+  }
+
+  // Reset / Recenter location to TDTU District 7
+  window.addEventListener('food-finder:reset-location', () => {
+    state.user.lat = CONFIG.FALLBACK_LAT;
+    state.user.lng = CONFIG.FALLBACK_LNG;
+    state.user.source = 'fallback';
+    state.filters.radius = CONFIG.DEFAULT_RADIUS || 3;
+    const radiusSelect = document.getElementById('filter-radius');
+    if (radiusSelect) radiusSelect.value = String(state.filters.radius);
+    setUserMarker(CONFIG.FALLBACK_LAT, CONFIG.FALLBACK_LNG);
+    flyTo(CONFIG.FALLBACK_LAT, CONFIG.FALLBACK_LNG, CONFIG.FOCUS_ZOOM);
+    showToast('Đã chuyển về khu vực ĐH Tôn Đức Thắng (Quận 7)');
+    loadRestaurants();
+  });
+
+  const recenterBtn = document.getElementById('btn-recenter-tdtu');
+  if (recenterBtn) {
+    recenterBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('food-finder:reset-location'));
+    });
   }
 
   // Retry (from error state)

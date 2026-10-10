@@ -135,8 +135,17 @@ function renderEmpty(listEl) {
   div.innerHTML = `
     <div class="empty-state__icon">${icon('empty')}</div>
     <div class="empty-state__title">Không có quán nào</div>
-    <div class="empty-state__desc">Không có quán nào trong bán kính này. Nới bán kính hoặc bỏ bớt bộ lọc.</div>
+    <div class="empty-state__desc">Không có quán nào trong bán kính này. Nới bán kính hoặc quay về khu vực trải nghiệm.</div>
+    <button class="btn btn--primary btn--sm" type="button" data-action="reset-location" style="margin-top:12px;cursor:pointer">
+      📍 Về ĐH Tôn Đức Thắng (Quận 7)
+    </button>
   `;
+  const resetBtn = div.querySelector('[data-action="reset-location"]');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('food-finder:reset-location'));
+    });
+  }
   listEl.appendChild(div);
 }
 

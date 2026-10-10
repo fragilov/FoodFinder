@@ -61,10 +61,12 @@ function mockCategories() {
   };
 }
 
-function mockRestaurants({ lat, lng, radius = 1, category_id, price_level, min_rating, open_now, q, sort = 'distance', limit = 50, offset = 0 }) {
+function mockRestaurants({ lat, lng, radius = 3, category_id, price_level, min_rating, open_now, q, sort = 'distance', limit = 50, offset = 0 } = {}) {
+  const currentLat = (lat !== undefined && lat !== null && !isNaN(Number(lat))) ? Number(lat) : CONFIG.FALLBACK_LAT;
+  const currentLng = (lng !== undefined && lng !== null && !isNaN(Number(lng))) ? Number(lng) : CONFIG.FALLBACK_LNG;
   let results = MOCK_RESTAURANTS.map(r => ({
     ...r,
-    distance_km: haversineKm(lat, lng, r.lat, r.lng),
+    distance_km: haversineKm(currentLat, currentLng, r.lat, r.lng),
     is_open_now: isOpenNowMock(r.open_time, r.close_time, r.is_24h),
   }));
 
@@ -131,6 +133,32 @@ function isOpenNowMock(openTime, closeTime, is24h) {
   return cur >= o && cur < c;
 }
 
+function mockRestaurantById(id) {
+  const restaurant = MOCK_RESTAURANTS.find(r => r.id === Number(id));
+  return restaurant
+    ? { success: true, data: { ...restaurant, images: [restaurant.image_url] } }
+    : { success: false, error: { code: 'NOT_FOUND', message: 'Không tìm thấy quán ăn' } };
+}
+
+function mockRandomRestaurant(params = {}) {
+  const result = mockRestaurants({ ...params, limit: 100 });
+  if (!result.data.length) {
+    return { success: true, data: null, meta: { reason: 'no_candidates' } };
+  }
+  // Weighted random — ưu tiên gần + rating cao
+  const pool = result.data.filter(r => !(params.exclude || []).includes(r.id));
+  const candidates = pool.length ? pool : result.data;
+  const weights = candidates.map(r =>
+    (0.30 + r.rating / 5) * Math.exp(-r.distance_km / 1.5));
+  const total = weights.reduce((s, w) => s + w, 0);
+  let t = Math.random() * total;
+  for (let i = 0; i < candidates.length; i++) {
+    t -= weights[i];
+    if (t <= 0) return { success: true, data: candidates[i] };
+  }
+  return { success: true, data: candidates[candidates.length - 1] };
+}
+
 // ── Public API ──
 
 export async function fetchCategories() {
@@ -139,48 +167,54 @@ export async function fetchCategories() {
     await new Promise(r => setTimeout(r, 150));
     return mockCategories();
   }
-  return apiFetch('categories.php');
+  try {
+    return await apiFetch('categories.php');
+  } catch (err) {
+    if (err?.name === 'AbortError') throw err;
+    console.warn('[FoodFinder] API categories gặp sự cố, tự động dùng mock data:', err);
+    return mockCategories();
+  }
 }
 
-export async function fetchRestaurants(params) {
+export async function fetchRestaurants(params = {}) {
   if (CONFIG.USE_MOCK) {
     await new Promise(r => setTimeout(r, 300));
     return mockRestaurants(params);
   }
-  return apiFetch('restaurants.php', params);
+  try {
+    return await apiFetch('restaurants.php', params);
+  } catch (err) {
+    if (err?.name === 'AbortError') throw err;
+    console.warn('[FoodFinder] API restaurants gặp sự cố hoặc CSDL chưa chạy, tự động dùng mock data:', err);
+    return mockRestaurants(params);
+  }
 }
 
-export async function fetchRandom(params) {
+export async function fetchRandom(params = {}) {
   if (CONFIG.USE_MOCK) {
     await new Promise(r => setTimeout(r, 200));
-    const result = mockRestaurants({ ...params, limit: 100 });
-    if (!result.data.length) {
-      return { success: true, data: null, meta: { reason: 'no_candidates' } };
-    }
-    // Weighted random — ưu tiên gần + rating cao
-    const pool = result.data.filter(r => !(params.exclude || []).includes(r.id));
-    const candidates = pool.length ? pool : result.data;
-    const weights = candidates.map(r =>
-      (0.30 + r.rating / 5) * Math.exp(-r.distance_km / 1.5));
-    const total = weights.reduce((s, w) => s + w, 0);
-    let t = Math.random() * total;
-    for (let i = 0; i < candidates.length; i++) {
-      t -= weights[i];
-      if (t <= 0) return { success: true, data: candidates[i] };
-    }
-    return { success: true, data: candidates[candidates.length - 1] };
+    return mockRandomRestaurant(params);
   }
-  return apiFetch('random.php', params);
+  try {
+    return await apiFetch('random.php', params);
+  } catch (err) {
+    if (err?.name === 'AbortError') throw err;
+    console.warn('[FoodFinder] API random gặp sự cố, tự động dùng mock data:', err);
+    return mockRandomRestaurant(params);
+  }
 }
 
 export async function fetchRestaurant(id) {
   if (CONFIG.USE_MOCK) {
-    const restaurant = MOCK_RESTAURANTS.find(r => r.id === Number(id));
-    return restaurant
-      ? { success: true, data: { ...restaurant, images: [restaurant.image_url] } }
-      : { success: false, error: { code: 'NOT_FOUND', message: 'Không tìm thấy quán ăn' } };
+    return mockRestaurantById(id);
   }
-  return apiFetch('restaurant.php', { id });
+  try {
+    return await apiFetch('restaurant.php', { id });
+  } catch (err) {
+    if (err?.name === 'AbortError') throw err;
+    console.warn('[FoodFinder] API restaurant gặp sự cố, tự động dùng mock data:', err);
+    return mockRestaurantById(id);
+  }
 }
 
 export function abortPending() {

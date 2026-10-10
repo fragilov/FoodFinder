@@ -11,10 +11,10 @@ export const CONFIG = {
   FALLBACK_LNG: 106.6996,
 
   // Bán kính mặc định (km)
-  DEFAULT_RADIUS: 1,
+  DEFAULT_RADIUS: 3,
 
   // Danh sách bán kính cho phép
-  ALLOWED_RADII: [0.5, 1, 2, 3, 5],
+  ALLOWED_RADII: [0.5, 1, 2, 3, 5, 10],
 
   // Geolocation timeout (ms)
   GEO_TIMEOUT: 8000,
