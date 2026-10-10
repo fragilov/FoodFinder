@@ -92,8 +92,11 @@ document.getElementById('hero-badges').innerHTML = `
 `;
 
 // Action buttons
-document.getElementById('btn-directions').href =
-  `https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}`;
+const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
+const dirUrl = isApple
+  ? `https://maps.apple.com/?daddr=${r.lat},${r.lng}&dirflg=d`
+  : `https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}&travelmode=driving`;
+document.getElementById('btn-directions').href = dirUrl;
 document.getElementById('btn-call').href = `tel:${encodeURIComponent(r.phone || '')}`;
 
 const btnFav = document.getElementById('btn-fav');
@@ -303,7 +306,17 @@ if (window.L) {
   const popup = document.createElement('div');
   const popupName = document.createElement('strong'); popupName.textContent = r.name;
   const popupAddress = document.createElement('div'); popupAddress.textContent = r.address;
-  popup.append(popupName, popupAddress);
+  popupAddress.style.cssText = 'font-size:12px;color:var(--c-ink-soft);margin-top:2px;';
+  const popupAction = document.createElement('div');
+  popupAction.style.marginTop = '8px';
+  const popupDir = document.createElement('a');
+  popupDir.className = 'btn btn--primary btn--sm';
+  popupDir.textContent = 'Chỉ đường';
+  popupDir.href = dirUrl;
+  popupDir.target = '_blank';
+  popupDir.rel = 'noopener noreferrer';
+  popupAction.appendChild(popupDir);
+  popup.append(popupName, popupAddress, popupAction);
   L.marker([r.lat, r.lng], { icon }).addTo(map).bindPopup(popup).openPopup();
 } else {
   document.getElementById('mini-map').innerHTML =

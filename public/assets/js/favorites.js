@@ -165,7 +165,7 @@ async function initFavoritesPage() {
           </div>
           <div class="fav-card__actions">
             <a href="restaurant.html?id=${r.id}" class="btn btn--secondary btn--sm">Chi tiết</a>
-            <a href="https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}"
+            <a href="https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}&travelmode=driving"
               target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
               ${icon('direction')} Chỉ đường
             </a>
