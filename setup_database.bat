@@ -30,13 +30,13 @@ echo Dang tao database 'food_finder'...
 "%MYSQL_BIN%" -u root -e "CREATE DATABASE IF NOT EXISTS food_finder CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
 echo Dang import schema.sql...
-"%MYSQL_BIN%" -u root food_finder < "%~dp0database\schema.sql"
+"%MYSQL_BIN%" --default-character-set=utf8mb4 -u root food_finder < "%~dp0database\schema.sql"
 
 echo Dang import seed_categories.sql...
-"%MYSQL_BIN%" -u root food_finder < "%~dp0database\seed_categories.sql"
+"%MYSQL_BIN%" --default-character-set=utf8mb4 -u root food_finder < "%~dp0database\seed_categories.sql"
 
 echo Dang import seed_restaurants.sql...
-"%MYSQL_BIN%" -u root food_finder < "%~dp0database\seed_restaurants.sql"
+"%MYSQL_BIN%" --default-character-set=utf8mb4 -u root food_finder < "%~dp0database\seed_restaurants.sql"
 
 echo.
 echo ========================================================
