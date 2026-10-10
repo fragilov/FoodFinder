@@ -1,2 +1,311 @@
-body{background:var(--c-bg,#f7f5ef);color:var(--c-ink,#18231e)}.admin-header{min-height:62px;padding:0 5vw;display:flex;gap:1.5rem;align-items:center;justify-content:space-between;background:var(--c-surface,#fff);border-bottom:1px solid var(--c-border,#ddd)}.admin-brand{font-weight:800;text-decoration:none;color:var(--c-primary,#d22b1f);font-size:1.12rem}.admin-brand small{font-weight:500;color:var(--c-ink-soft,#65706a)}.admin-header nav{display:flex;flex-wrap:wrap;align-items:center;gap:1rem}.admin-header a,.link-button{font:inherit;color:var(--c-ink,#18231e);background:none;border:0;text-decoration:none;cursor:pointer}.admin-container{max-width:1180px;margin:0 auto;padding:2rem 1rem 4rem}.admin-heading{display:flex;justify-content:space-between;gap:1rem;align-items:center;margin-bottom:1.25rem}.admin-heading h1{margin:0;font-size:clamp(1.45rem,3vw,2rem)}.admin-toolbar{padding:1rem;background:var(--c-surface,#fff);border:1px solid var(--c-border,#ddd);border-radius:.75rem;display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem}.admin-input,.admin-select{min-height:40px;padding:.55rem .7rem;border:1px solid var(--c-border,#bbb);border-radius:.45rem;background:var(--c-surface,#fff);color:inherit}.admin-table-wrap{overflow:auto;background:var(--c-surface,#fff);border:1px solid var(--c-border,#ddd);border-radius:.75rem}.admin-table{width:100%;border-collapse:collapse;min-width:760px}.admin-table th,.admin-table td{padding:.75rem;text-align:left;border-bottom:1px solid var(--c-border,#eee);vertical-align:middle}.admin-table th{font-size:.78rem;color:var(--c-ink-soft,#65706a)}.admin-thumb{width:44px;height:44px;object-fit:cover;border-radius:.45rem;vertical-align:middle;margin-right:.6rem}.inline{display:inline}.actions{display:flex;gap:.45rem;align-items:center}.admin-flash{padding:.8rem 1rem;border-radius:.5rem;margin-bottom:1rem;background:#eaf7ef;color:#145a32}.admin-flash--error{background:#fff0ed;color:#9c271e}.admin-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;padding:1.25rem;background:var(--c-surface,#fff);border:1px solid var(--c-border,#ddd);border-radius:.75rem}.admin-form .wide{grid-column:1/-1}.admin-form label{display:grid;gap:.35rem;font-weight:600;font-size:.9rem}.admin-form small{font-weight:400;color:var(--c-ink-soft,#65706a)}.admin-map{height:330px;border-radius:.6rem;overflow:hidden;border:1px solid var(--c-border,#ddd)}.admin-note{color:var(--c-ink-soft,#65706a);font-size:.9rem}.danger{color:#a3271d}.pagination{display:flex;gap:.5rem;margin-top:1rem;align-items:center}.pagination a{padding:.4rem .65rem;border:1px solid var(--c-border,#ddd);border-radius:.4rem;text-decoration:none;color:inherit}@media(max-width:650px){.admin-header{padding:.75rem 1rem;align-items:flex-start;flex-direction:column}.admin-form{grid-template-columns:1fr}.admin-container{padding:1.25rem .75rem}.admin-heading{align-items:flex-start;flex-direction:column}}
+/* ============================================================
+   ADMIN.CSS — Giao diện quản trị Food Finder
+   Chuẩn hóa Typography tiếng Việt + Thiết kế hiện đại, tinh gọn
+   ============================================================ */
 
+body {
+  background: var(--c-bg, #f6f1e4);
+  color: var(--c-ink, #181818);
+  font-family: var(--font-ui, "Be Vietnam Pro", system-ui, sans-serif);
+  letter-spacing: -0.005em;
+  line-height: 1.55;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header ── */
+.admin-header {
+  min-height: 66px;
+  padding: 0 max(5vw, 1.5rem);
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--c-surface, #fff);
+  border-bottom: 2px solid var(--c-border, #181818);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.admin-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--c-primary, #d22b1f);
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.admin-brand small {
+  display: inline-block;
+  padding: 2px 7px;
+  background: var(--c-primary-tint, #ffd8ce);
+  color: var(--c-ink, #181818);
+  border: 1px solid var(--c-border, #181818);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-left: 0.2rem;
+}
+
+.admin-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.admin-header nav a,
+.link-button {
+  font-family: var(--font-ui, "Be Vietnam Pro", sans-serif);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--c-ink, #181818);
+  background: none;
+  border: none;
+  padding: 0.45rem 0.85rem;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 140ms ease-out;
+}
+
+.admin-header nav a:hover,
+.admin-header nav a:focus-visible,
+.link-button:hover {
+  background: var(--c-surface-sunk, #eadfca);
+  color: var(--c-primary, #d22b1f);
+  text-decoration: none;
+}
+
+.admin-header nav a.active {
+  background: var(--c-primary, #ff4d2e);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── Container ── */
+.admin-container {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 2.25rem 1.5rem 5rem;
+}
+
+/* ── Heading ── */
+.admin-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin-bottom: 1.75rem;
+}
+
+.admin-heading h1 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
+  font-size: clamp(1.6rem, 3.2vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  color: var(--c-ink, #181818);
+}
+
+.admin-note {
+  color: var(--c-ink-soft, #46544c);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ── Toolbar ── */
+.admin-toolbar {
+  padding: 1rem 1.25rem;
+  background: var(--c-surface, #fff);
+  border: 2px solid var(--c-border, #181818);
+  box-shadow: 2px 2px 0 var(--c-border, #181818);
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.admin-input,
+.admin-select {
+  min-height: 42px;
+  padding: 0.55rem 0.85rem;
+  border: 2px solid var(--c-border, #181818);
+  background: var(--c-surface, #fff);
+  color: var(--c-ink, #181818);
+  font-family: var(--font-ui, "Be Vietnam Pro", sans-serif);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.admin-input:focus,
+.admin-select:focus {
+  outline: none;
+  box-shadow: 2px 2px 0 var(--c-primary, #ff4d2e);
+  border-color: var(--c-primary, #ff4d2e);
+}
+
+/* ── Table ── */
+.admin-table-wrap {
+  overflow-x: auto;
+  background: var(--c-surface, #fff);
+  border: 2px solid var(--c-border, #181818);
+  box-shadow: 3px 3px 0 var(--c-border, #181818);
+  margin-bottom: 1.5rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+  font-size: 0.92rem;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--c-border, #e0ded8);
+  vertical-align: middle;
+}
+
+.admin-table th {
+  font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c-ink-soft, #46544c);
+  background: var(--c-surface-sunk, #f4eee2);
+  border-bottom: 2px solid var(--c-border, #181818);
+}
+
+.admin-table tr:hover td {
+  background: rgba(255, 212, 0, 0.12);
+}
+
+.admin-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border: 1.5px solid var(--c-border, #181818);
+  vertical-align: middle;
+  margin-right: 0.75rem;
+  background: var(--c-surface-sunk, #eadfca);
+}
+
+.inline { display: inline; }
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* ── Flash / Alerts ── */
+.admin-flash {
+  padding: 0.9rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid #067a57;
+  background: #eaf8f1;
+  color: #065a41;
+  font-weight: 600;
+  box-shadow: 2px 2px 0 #067a57;
+}
+
+.admin-flash--error {
+  border-color: #d92d12;
+  background: #fff1ef;
+  color: #a81d14;
+  box-shadow: 2px 2px 0 #d92d12;
+}
+
+/* ── Form ── */
+.admin-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  padding: 1.75rem;
+  background: var(--c-surface, #fff);
+  border: 2px solid var(--c-border, #181818);
+  box-shadow: 4px 4px 0 var(--c-border, #181818);
+}
+
+.admin-form .wide {
+  grid-column: 1 / -1;
+}
+
+.admin-form label {
+  display: grid;
+  gap: 0.45rem;
+  font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--c-ink, #181818);
+}
+
+.admin-form small {
+  font-family: var(--font-ui, "Be Vietnam Pro", sans-serif);
+  font-weight: 400;
+  color: var(--c-ink-soft, #626262);
+  font-size: 0.82rem;
+}
+
+.admin-map {
+  height: 340px;
+  overflow: hidden;
+  border: 2px solid var(--c-border, #181818);
+}
+
+.danger {
+  color: var(--c-primary, #d92d12);
+}
+
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  align-items: center;
+}
+
+.pagination a,
+.pagination span {
+  padding: 0.45rem 0.85rem;
+  border: 2px solid var(--c-border, #181818);
+  background: var(--c-surface, #fff);
+  text-decoration: none;
+  color: inherit;
+  font-weight: 700;
+  font-size: 0.88rem;
+  box-shadow: 2px 2px 0 var(--c-border, #181818);
+}
+
+.pagination a:hover {
+  background: var(--c-accent, #ffd400);
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 0.85rem 1rem;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .admin-form {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+  .admin-container {
+    padding: 1.5rem 1rem 3.5rem;
+  }
+  .admin-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}

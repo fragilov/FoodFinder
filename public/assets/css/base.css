@@ -77,7 +77,8 @@ ul, ol {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   line-height: var(--lh-tight);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 
 /* Dòng nội dung tối đa 70 ký tự */

@@ -43,6 +43,9 @@ function admin_category_icon(string $slugOrIcon): string {
 }
 function admin_header(string $title): void { $flash = admin_flash(); ?>
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?= h($title) ?> — Food Finder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/tokens.css"><link rel="stylesheet" href="../assets/css/base.css"><link rel="stylesheet" href="../assets/css/components.css"><link rel="stylesheet" href="assets/admin.css"></head><body>
 <header class="admin-header"><a href="dashboard.php" class="admin-brand"><?= admin_svg_icon('logo') ?> Food Finder <small>Quản trị</small></a><nav><a href="dashboard.php">Tổng quan</a><a href="index.php">Quán ăn</a><a href="categories.php">Danh mục</a><a href="reviews.php">Đánh giá</a><a href="restaurant_form.php">+ Thêm quán</a><a href="../index.html" target="_blank" rel="noopener">Xem bản đồ</a><form action="logout.php" method="post" class="inline"><input type="hidden" name="csrf" value="<?= h(csrf_token()) ?>"><button class="link-button">Đăng xuất</button></form></nav></header><main class="admin-container">
 <?php if ($flash): ?><div class="admin-flash admin-flash--<?= h($flash['type']) ?>" role="status"><?= h($flash['message']) ?></div><?php endif; ?>
