@@ -1,173 +1,136 @@
-# Kế Hoạch & Tổng Quan Dự Án Food Finder 🍜
+# Kế Hoạch & Tổng Quan Dự Án Food & Trip Finder 🍜🏛️🎡
 
-> **Dự án**: Food Finder — Ứng dụng web tìm kiếm quán ăn thông minh quanh vị trí người dùng.  
-> **Khu vực dữ liệu mẫu**: Quanh Trường Đại học Tôn Đức Thắng (TDTU), Quận 7, TP. Hồ Chí Minh.  
-> **Cập nhật ngày**: 11/10/2026.
-
----
-
-## 1. TỔNG QUAN DỰ ÁN
-Food Finder là nền tảng bản đồ ẩm thực tương tác giúp người dùng dễ dàng tìm kiếm, lọc và định vị các địa điểm ăn uống xung quanh vị trí thực tế của mình. Hệ thống cung cấp giải pháp trọn vẹn từ trải nghiệm tìm kiếm của thực khách (Client-side) cho tới hệ thống quản trị dữ liệu tập trung (Admin CMS).
+> **Dự án**: Food & Trip Finder — Nền tảng bản đồ thông minh tích hợp tìm kiếm quán ăn/uống, địa điểm du lịch, khu vui chơi và **Tự động đề xuất lộ trình đi chơi quanh vị trí người dùng**.  
+> **Khu vực dữ liệu mẫu**: Quanh Trường Đại học Tôn Đức Thắng (TDTU), Quận 7, TP. Hồ Chí Minh & các điểm du lịch tiêu biểu tại TP.HCM.  
+> **Cập nhật ngày**: 11/10/2026.  
+> **Tài liệu theo dõi công việc**: [`FoodFinder_Project_Plan.xlsx`](./FoodFinder_Project_Plan.xlsx) & [`FoodFinder_Project_Plan.csv`](./FoodFinder_Project_Plan.csv).
 
 ---
 
-## 2. CÔNG NGHỆ HIỆN ĐANG SỬ DỤNG (TECH STACK)
+## 1. TỔNG QUAN ĐỊNH HƯỚNG MỚI (NEW PROJECT SCOPE)
 
-### 2.1. Frontend (Giao diện & Trải nghiệm người dùng)
-* **Ngôn ngữ cốt lõi**:
-  * **HTML5 Semantic**: Cấu trúc chuẩn SEO, thân thiện trợ năng (Accessibility/ARIA).
-  * **CSS3 Hiện đại**: 
-    * Thiết kế hệ thống biến màu sắc, typography theo token (`tokens.css`).
-    * Phong cách đồ họa hiện đại Neo-Brutalism kết hợp Glassmorphism thanh lịch (`brutal.css`, `layout.css`).
-    * Hỗ trợ giao diện Sáng / Tối (Light / Dark Mode) linh hoạt.
-  * **Vanilla JavaScript (ES6+)**:
-    * Kiến trúc ES Modules (`type="module"`), phân chia module chức năng độc lập (`main.js`, `explore.js`, `restaurant.js`, `sheet.js`, `map.js`...).
-* **Bản đồ & Định vị không gian (Mapping & Geolocation)**:
-  * **Leaflet.js (v1.9.4)**: Thư viện bản đồ tương tác mã nguồn mở nhẹ, hiệu năng cao.
-  * **Leaflet.markercluster (v1.5.3)**: Tự động gom cụm các địa điểm khi thu nhỏ bản đồ, tránh giật lag khi có nhiều dữ liệu.
-  * **OpenStreetMap Tiles**: Dịch vụ bản đồ nền tiêu chuẩn miễn phí, không watermark.
-  * **HTML5 Geolocation API**: Tự động xác định toạ độ GPS của người dùng với fallback mượt mà về toạ độ mẫu TDTU Quận 7.
-* **Typography & Icons**:
-  * Font chữ **Be Vietnam Pro** (hỗ trợ 100% tiếng Việt có dấu, chuẩn mực nét chữ) kết hợp **Plus Jakarta Sans**.
-  * Bộ icon vector SVG nội bộ dạng inline (`icons.js`), không bị phụ thuộc tài nguyên bên ngoài.
-* **Lưu trữ & Fallback dữ liệu**:
-  * **LocalStorage**: Lưu danh sách quán yêu thích (`favorites`) và chế độ nền (`food-finder-theme`).
-  * **Mock Data Fallback (`mock-data.js`)**: Tự động nhận diện khi người dùng mở trực tiếp file HTML hoặc khi backend PHP chưa khởi chạy để vẫn có thể trải nghiệm xem trước đầy đủ.
+Từ định hướng ban đầu chỉ tập trung vào ẩm thực, dự án được nâng cấp toàn diện thành **Nền tảng Khám phá Thành phố & Lập Lịch Trình Thông Minh**:
 
-### 2.2. Backend (Xử lý máy chủ & RESTful API)
-* **Môi trường & Ngôn ngữ**:
-  * **PHP 8.1+** (Strict Types `declare(strict_types=1)`).
-  * Kiến trúc RESTful API nhẹ, không sử dụng framework nặng nề cồng kềnh giúp tối ưu tốc độ phản hồi.
-* **Thuật toán Không gian Địa lý (Geospatial Computation)**:
-  * Thuật toán **Bounding Box** (`geo.php`): Giảm tải phạm vi tìm kiếm kinh độ/vĩ độ trước khi tính toán chuyên sâu.
-  * Công thức **Haversine Distance**: Tính toán khoảng cách chính xác theo đường cong mặt cầu Trái Đất ($R = 6371.0088\text{ km}$).
-  * Bộ lọc giờ mở cửa thực tế (`is_open_now`): Hỗ trợ quán mở 24/7 và quán mở xuyên đêm qua ngày hôm sau.
-* **Thuật toán Gợi ý ngẫu nhiên ("Hôm nay ăn gì?")**:
-  * **Weighted Random Sampling**: Quán ăn có điểm đánh giá cao và khoảng cách gần hơn sẽ có tỷ lệ được chọn cao hơn dựa trên hàm trọng số phân rã khoảng cách:
-    $$W = \left(0.3 + \frac{\text{rating}}{5}\right) \times e^{-\frac{\text{distance}}{1.5}}$$
-  * Cơ chế loại trừ quán vừa quay (`exclude`) và giới hạn tần suất thao tác (Rate Limit chống spam 30 requests/phút).
-* **Bảo mật & Phiên làm việc (Security & Session)**:
-  * **Secure Sessions**: Cờ HttpOnly, SameSite=Lax, tự động kích hoạt Secure flag khi chạy qua HTTPS.
-  * **Bảo vệ Brute-Force**: Ghi nhận nhật ký đăng nhập sai theo địa chỉ IP dạng nhị phân (`inet_pton`), khóa tạm thời nếu nhập sai quá 5 lần trong 15 phút.
-  * **Chống CSRF**: Kiểm tra token ngẫu nhiên `bin2hex(random_bytes(32))` ở tất cả các biểu mẫu gửi dữ liệu.
-  * **Xác thực mật khẩu**: Sử dụng chuẩn `password_hash()` và `password_verify()`.
-  * **Upload an toàn**: Kiểm tra MIME type thực tế thông qua Fileinfo (`finfo`), sinh tên tệp ngẫu nhiên chống thực thi script trái phép.
+1. **Mở rộng Hệ sinh thái Địa điểm (Places Expansion)**:
+   * **Ẩm thực & Đồ uống (Food & Beverage 🍜)**: Quán ăn, cà phê, trà sữa, ăn vặt, nhà hàng tiệc nướng, món chay...
+   * **Địa điểm Du lịch & Tham quan (Tourism & Sightseeing 🏛️)**: Di tích lịch sử, bảo tàng nghệ thuật, công viên cảnh quan, bến tàu, view ngắm hoàng hôn, cầu biểu tượng...
+   * **Khu vui chơi & Trải nghiệm (Entertainment & Activities 🎡)**: Khu trò chơi vận động (trampoline, bowling), rạp chiếu phim, board game cafe, workshop thủ công mỹ nghệ, bắn cung, khu giải trí phức hợp...
+
+2. **Tính năng Đột phá Cốt lõi: Đề xuất Lộ trình Đi chơi Thông minh (Smart Itinerary Generator 🗺️)**:
+   * Tự động khởi tạo lịch trình dạo chơi nửa ngày hoặc cả ngày dựa trên **tọa độ GPS thực tế** của người dùng.
+   * Kết hợp hài hòa giữa các hoạt động: **Ăn uống khởi đầu -> Tham quan / Vui chơi -> Ăn chính -> Thư giãn / Dạo phố**.
+   * Thuật toán tối ưu hóa đường đi liên tục (Nearest Neighbor Heuristic), tránh đi vòng vèo zíc zắc hoặc ngược hướng.
+   * Giao diện dòng thời gian (Timeline) trực quan, vẽ đường polyline kết nối các điểm trên nền Leaflet.js và tích hợp nút mở lộ trình đa điểm trực tiếp trên Google Maps.
+
+---
+
+## 2. KIẾN TRÚC & CÔNG NGHỆ (TECH STACK)
+
+### 2.1. Frontend
+* **HTML5 Semantic & Modern CSS**: Hệ thống Design Token Neo-Brutalism kết hợp Glassmorphism (`tokens.css`, `brutal.css`, `layout.css`). Hỗ trợ Light / Dark Mode.
+* **Vanilla JavaScript ES6+**: Kiến trúc module độc lập (`map.js`, `filters.js`, `explore.js`, `itinerary.js`, `icons.js`...).
+* **Bản đồ & Định vị**: Leaflet.js (v1.9.4) + MarkerCluster + OpenStreetMap + HTML5 Geolocation API (fallback TDTU Quận 7).
+* **Tuyến đường (Routing Polyline)**: Vẽ đường lộ trình trên bản đồ, tích hợp link Multi-waypoint sang Google Maps (`https://www.google.com/maps/dir/...`).
+* **Lưu trữ cục bộ**: LocalStorage lưu quán yêu thích và các lộ trình đã tạo.
+
+### 2.2. Backend & Thuật toán
+* **PHP 8.1+ RESTful API**: Cấu trúc nhẹ, không phụ thuộc framework cồng kềnh.
+* **Thuật toán Địa lý (Geospatial Computation)**:
+  * Bounding Box & Công thức Haversine Distance ($R = 6371.0088\text{ km}$).
+  * Bộ lọc giờ mở cửa thực tế (`is_open_now`) hỗ trợ cả địa điểm mở đêm/24/7.
+* **Thuật toán Đề xuất Lộ trình Thông minh (`app/itinerary.php`)**:
+  * Nhận input: Vị trí xuất phát, Khung thời gian (Nửa ngày / Cả ngày / Buổi tối), Phong cách chuyến đi (Chill, Vui chơi năng động, Check-in sống ảo, Ăn sập), Bán kính.
+  * Phân phối logic chặng dừng theo giờ mở cửa, loại hình và khoảng cách liền kề ngắn nhất.
+  * Hỗ trợ API đổi chặng đơn lẻ (`api/itinerary_reroll.php`).
+* **Bảo mật**: Anti-CSRF token, Session HttpOnly/SameSite, Brute-force IP protection, Upload validation qua MIME type thực tế.
 
 ### 2.3. Cơ sở dữ liệu (Database)
-* **Hệ quản trị CSDL**: **MySQL / MariaDB** (Default Charset: `utf8mb4_unicode_ci`).
-* **Các bảng dữ liệu chuẩn hoá**:
-  1. `categories`: Danh mục ẩm thực (Cơm, Bún/Phở, Bánh mì, Lẩu nướng, Ăn vặt, Chay, Cà phê...) kèm icon, slug, thứ tự sắp xếp.
-  2. `restaurants`: Quán ăn (tên, địa chỉ, số điện thoại, lat/lng, khoảng giá, rating, ảnh, giờ hoạt động, trạng thái). Đã đánh chỉ mục địa lý `idx_geo (latitude, longitude)`, `idx_active_cat`, `idx_rating` và tìm kiếm văn bản `FULLTEXT KEY ft_name_address`.
-  3. `restaurant_images`: Album nhiều hình ảnh chi tiết cho từng quán ăn (quan hệ 1-N, cascade delete).
-  4. `admins`: Tài khoản quản trị viên.
-  5. `login_attempts`: Nhật ký các lần đăng nhập sai theo IP để phòng chống brute-force.
-  6. `reviews`: Đánh giá của thực khách (số sao, nhận xét, kiểm duyệt duyệt/ẩn).
+* **MySQL / MariaDB** (`utf8mb4_unicode_ci`).
+* Mở rộng schema:
+  * `places`: Mở rộng từ `restaurants` hoặc bảng chung, bổ sung cột `place_type` (`food`, `tourism`, `entertainment`), `ticket_price`, `estimated_duration` (phút), `best_time_slot`.
+  * `categories`: Thêm cột `type_group` để phân nhóm cấp 1 (Ẩm thực, Du lịch, Vui chơi).
+  * `itinerary_logs`: Nhật ký các lộ trình được tạo để đo lường KPI & phân tích thói quen người dùng.
 
 ---
 
-## 3. CÁC TÍNH NĂNG ĐÃ TRIỂN KHAI
+## 3. FILE KẾ HOẠCH GOOGLE SHEETS & TIẾN ĐỘ THỰC HIỆN
 
-### 3.1. Phía Khách Hàng / Người Dùng (Client App)
-1. **Bản đồ ẩm thực trực quan (`index.html`)**:
-   * Định vị vị trí hiện tại của người dùng.
-   * Hiển thị quán ăn theo bán kính (500m, 1km, 2km, 3km, 5km, 10km).
-   * Lọc đa chiều: Theo danh mục món ăn, mức giá, số sao tối thiểu, quán đang mở cửa ngay bây giờ.
-   * Giao diện Responsive: Desktop có Sidebar thông tin; Mobile có Bottom Sheet vuốt chạm mượt mà.
-   * Đổi giao diện Sáng / Tối (Dark / Light).
-2. **Tính năng "Hôm nay ăn gì?" (Randomizer)**:
-   * Nút nổi FAB truy cập nhanh.
-   * Vòng quay gợi ý quán ăn ngẫu nhiên có trọng số thông minh.
-   * Nút "Chỉ đường", "Chọn lại" và "Đóng".
-3. **Khám phá quán ăn dạng lưới (`explore.html`)**:
-   * Xem danh sách quán dưới dạng lưới thẻ (Grid card).
-   * Tìm kiếm tức thì theo từ khóa tên hoặc địa chỉ.
-   * Bộ lọc nhanh và sắp xếp theo Đánh giá cao / Giá rẻ nhất / Tên quán.
-4. **Trang chi tiết quán ăn (`restaurant.html`)**:
-   * Hiển thị đầy đủ thông tin: Địa chỉ, khoảng giá, số điện thoại, giờ hoạt động thực tế (bật đèn báo Đang mở / Đã đóng).
-   * Nút gọi điện nhanh (`tel:`), nút chia sẻ (Web Share API).
-   * Nút dẫn đường thông minh: Tự động điều hướng sang Google Maps hoặc Apple Maps theo thiết bị.
-   * Bộ sưu tập hình ảnh món ăn (Gallery).
-   * Xem đánh giá, xếp hạng sao và nhận xét của thực khách.
-   * Nút "Lưu quán yêu thích" đánh dấu trái tim.
-5. **Trang quán ăn đã lưu (`favorites.html`)**:
-   * Quản lý các quán yêu thích được lưu cục bộ trên thiết bị của người dùng (LocalStorage).
-6. **Trang đề xuất quán ăn (`suggest.html`)**:
-   * Biểu mẫu cộng đồng chia sẻ quán ăn mới.
-   * Tích hợp bản đồ mini cho phép người dùng chọn điểm ghim toạ độ trực tiếp.
-7. **Trang giới thiệu (`about.html`)**:
-   * Giới thiệu thông tin nền tảng và định hướng dự án.
+Toàn bộ kế hoạch phân công công việc đã được cấu trúc thành trang tính chuyên nghiệp tại file:
+* 📁 **File Excel**: [`FoodFinder_Project_Plan.xlsx`](./FoodFinder_Project_Plan.xlsx) (Đầy đủ 4 Sheet, định dạng màu sắc Neo-Brutalism, Dropdown Data Validation và Công thức tự động).
+* 📁 **File CSV**: [`FoodFinder_Project_Plan.csv`](./FoodFinder_Project_Plan.csv) (Dùng import nhanh vào bất kỳ phần mềm bảng tính nào).
 
-### 3.2. Phía Quản Trị Viên (Admin CMS - `public/admin/`)
-1. **Bảo mật & Đăng nhập**: Form đăng nhập chống brute-force IP và bảo vệ session.
-2. **Bảng điều khiển KPI (`dashboard.php`)**:
-   * Thống kê tổng số quán, số quán active, số danh mục, rating trung bình, tổng số đánh giá.
-   * Biểu đồ tỷ trọng phân bổ quán ăn theo danh mục.
-   * Top 5 quán ăn được đánh giá cao nhất.
-   * 5 quán ăn được cập nhật gần nhất.
-3. **Quản lý quán ăn (CRUD Quán ăn)**:
-   * Xem danh sách quán ăn, phân trang, tìm kiếm.
-   * Thêm mới / Cập nhật quán ăn kèm toạ độ GPS, giờ mở cửa, upload ảnh đại diện.
-   * Bật/tắt trạng thái hoạt động hoặc xóa quán.
-4. **Quản lý danh mục (`categories.php`)**:
-   * Thêm, sửa, xóa danh mục món ăn, phân bổ icon đại diện và thứ tự ưu tiên.
-5. **Quản lý đánh giá (`reviews.php`)**:
-   * Kiểm duyệt các nhận xét, đánh giá của thực khách (Duyệt hiển thị, Ẩn vi phạm, Xoá đánh giá).
+### 3.1. Hướng Dẫn Tải Lên Google Sheets (Chỉ mất 5 giây)
+1. Mở trình duyệt và truy cập: **[sheets.new](https://sheets.new)** (tạo một Google Sheet trắng mới).
+2. Trên thanh menu, chọn: **Tệp (File)** > **Mở (Open)** (hoặc phím tắt `Ctrl + O`).
+3. Chọn tab **Tải lên (Upload)** và kéo thả file `FoodFinder_Project_Plan.xlsx` từ thư mục dự án vào.
+4. Google Sheets sẽ tự động chuyển đổi thành 1 bảng tính Google Sheet trực tuyến hoàn chỉnh với đầy đủ công thức, màu sắc, dropdown và phân quyền chia sẻ cho nhóm!
 
 ---
 
-## 4. KẾ HOẠCH HÀNH ĐỘNG & LỘ TRÌNH PHÁT TRIỂN (PROJECT PLAN)
+## 4. CHI TIẾT BẢNG PHÂN CÔNG TASK (TASK BREAKDOWN)
 
-Dưới đây là kế hoạch hành động phân theo 4 giai đoạn rõ ràng:
+| Mã Task | Phân Hệ | Tên Công Việc | Mô Tả & Tiêu Chí Nghiệm Thu | Độ Ưu Tiên | Trạng Thái | Hạn Chót |
+| :--- | :--- | :--- | :--- | :---: | :---: | :---: |
+| **DB-01** | Database | Mở rộng Schema hỗ trợ Đa loại hình địa điểm | Mở rộng bảng `restaurants` (hoặc `places`) thêm: `place_type` ('food', 'tourism', 'entertainment'), `ticket_price`, `estimated_duration`, `best_time_slot`. | **P1 - Cao** | To Do | 14/10/2026 |
+| **DB-02** | Database | Mở rộng Bảng Danh Mục theo 3 Nhóm lớn | Thêm `type_group` vào bảng `categories`. Seed danh mục Du lịch (Bảo tàng, Di tích, Công viên) & Vui chơi (Khu trò chơi, Rạp phim, Boardgame, Workshop). | **P1 - Cao** | To Do | 14/10/2026 |
+| **DB-03** | Database | Thu thập dữ liệu & Seed 30+ Điểm Du lịch & Vui chơi | Soạn `seed_places_expansion.sql` bổ sung 30+ địa điểm thực tế quanh Q7/TPHCM (Cầu Ánh Sao, Hồ Bán Nguyệt, Artinus 3D, Jump Arena, Thảo Cầm Viên, Landmark 81...) kèm GPS, giá vé, giờ mở cửa. | **P1 - Cao** | To Do | 16/10/2026 |
+| **DB-04** | Frontend | Cập nhật Mock Data Frontend (`mock-data.js`) | Đồng bộ toàn bộ điểm Du lịch và Vui chơi vào `mock-data.js` để app chạy demo tĩnh mượt mà khi chưa bật backend PHP. | **P2 - TB** | To Do | 16/10/2026 |
+| **BE-01** | Backend | RESTful API Lấy địa điểm theo loại hình | Nâng cấp `/api/restaurants.php` (hoặc `/api/places.php`) nhận tham số `type=all\|food\|tourism\|entertainment`, `min_price`, `max_price`, tính khoảng cách Haversine. | **P1 - Cao** | To Do | 17/10/2026 |
+| **BE-02** | Backend | Thiết kế Thuật toán Đề xuất Lộ trình (`app/itinerary.php`) | Xây dựng thuật toán ghép lịch trình: Vị trí hiện tại -> [Ăn sáng/Cafe] -> [Khu vui chơi/Điểm tham quan] -> [Ăn trưa/tối] -> [Chill ngắm cảnh]. Sắp xếp theo khoảng cách ngắn nhất (Nearest Neighbor). | **P1 - Cao** | To Do | 20/10/2026 |
+| **BE-03** | Backend | Endpoint API Đề xuất Lộ trình (`/api/itinerary.php`) | API nhận: `user_lat`, `user_lng`, `duration` (half_day/full_day/evening), `vibe`, `max_radius`. Trả về JSON: tổng km, tổng giờ dự kiến, danh sách stops kèm thời gian đề xuất. | **P1 - Cao** | To Do | 21/10/2026 |
+| **BE-04** | Backend | API Đổi Chặng Đơn Lẻ (`/api/itinerary_reroll.php`) | Cho phép đổi 1 địa điểm trong chặng bất kỳ sang địa điểm tương đương gần đó mà không làm xáo trộn các chặng còn lại. | **P2 - TB** | To Do | 22/10/2026 |
+| **FE-01** | Frontend | Nâng cấp Bộ lọc Nhóm Địa Điểm trên Bản đồ & Explore | Thêm thanh Tabs chọn nhóm: [Tất cả] [🍜 Ẩm thực] [🏛️ Du lịch] [🎡 Vui chơi giải trí] trên `index.html` và `explore.html`. | **P1 - Cao** | To Do | 19/10/2026 |
+| **FE-02** | Frontend | Marker & Icon Riêng Biệt cho Từng Loại Địa Điểm | Đỏ/cam cho Quán ăn; Xanh lam cho Du lịch; Vàng/cam neon cho Vui chơi. Cập nhật SVG icon vào `icons.js`. | **P2 - TB** | To Do | 20/10/2026 |
+| **FE-03** | Frontend | Cập nhật Thẻ Địa Điểm & Trang Chi Tiết | Hiển thị badge loại địa điểm, giá vé tham quan, thời lượng trải nghiệm đề xuất (Ví dụ: "Thời lượng: ~90 phút"). | **P2 - TB** | To Do | 21/10/2026 |
+| **FE-04** | Frontend | Giao diện Thiết lập Lộ trình (Itinerary Setup Modal) | Form chọn: Thời lượng chuyến đi (Nửa ngày / Cả ngày / Tối), Vibe (Chill, Hẹn hò, Trải nghiệm, Ăn sập), Bán kính. Nút "Tạo lộ trình ngay". | **P1 - Cao** | To Do | 23/10/2026 |
+| **FE-05** | Frontend | Giao diện Timeline Lịch trình Thông minh | Dòng thời gian trực quan (09:00 -> 11:30...), Thẻ địa điểm, Khoảng cách từng chặng, Nút "Đổi địa điểm khác" (Reroll). | **P1 - Cao** | To Do | 25/10/2026 |
+| **FE-06** | Frontend | Vẽ Tuyến Đường Đa Điểm trên Leaflet (Polyline) | Vẽ đường Polyline nối Vị trí người dùng -> Điểm 1 -> Điểm 2 -> Điểm 3... Đánh số thứ tự Marker [1][2][3]. Nút mở toàn bộ lộ trình trên Google Maps. | **P1 - Cao** | To Do | 26/10/2026 |
+| **FE-07** | Frontend | Lưu & Chia Sẻ Lộ Trình (LocalStorage & Share) | Lưu các lộ trình đã tạo vào danh sách cá nhân và chia sẻ lộ trình qua Web Share API / Copy Link. | **P3 - Thấp** | To Do | 27/10/2026 |
+| **ADM-01** | Admin | Cập nhật Quản Trị Đa Loại Hình trong Admin CMS | Thêm trường chọn Loại hình, giá vé, thời lượng ghé thăm trong trang thêm/sửa địa điểm của Admin CMS. | **P2 - TB** | To Do | 26/10/2026 |
+| **ADM-02** | Admin | Thống kê Dashboard Quản Trị Mở Rộng | Cập nhật biểu đồ cơ cấu địa điểm (Ăn uống vs Du lịch vs Vui chơi) và thống kê lượt tạo lộ trình. | **P3 - Thấp** | To Do | 28/10/2026 |
+| **QA-01** | QA | Kiểm thử Logic Thuật toán Lộ trình | Test với các toạ độ GPS khác nhau quanh TP.HCM: TDTU Quận 7, Bến Bạch Đằng, Sala Thủ Thiêm; đảm bảo lộ trình hợp lý và không ngược chiều. | **P1 - Cao** | To Do | 28/10/2026 |
+| **QA-02** | QA | Kiểm thử Responsive Mobile & Hiệu năng Bản đồ | Kiểm tra trên thiết bị di động thực tế (iOS, Android), thao tác vuốt chạm bản đồ, độ mượt khi zoom và tải nhiều marker/polyline. | **P2 - TB** | To Do | 30/10/2026 |
+| **DOC-01** | Docs | Cập nhật Báo Cáo Kỹ Thuật, Sơ Đồ ERD & Thuật Toán | Vẽ sơ đồ hoạt động (Flowchart Lộ trình), sơ đồ Use-Case, cập nhật ERD database và tài liệu API. | **P2 - TB** | To Do | 31/10/2026 |
+| **DOC-02** | Docs | Chuẩn bị Slide Thuyết Trình & Kịch bản Demo Đồ án | Thiết kế slide báo cáo tổng kết, kịch bản demo làm nổi bật tính năng gợi ý lịch trình thông minh. | **P2 - TB** | To Do | 02/11/2026 |
 
+---
+
+## 5. LỘ TRÌNH 4 GIAI ĐOẠN (SPRINT TIMELINE)
+
+```mermaid
+gantt
+    title Lộ Trình Triển Khai Food & Trip Finder (Tháng 10 - Tháng 11/2026)
+    dateFormat  YYYY-MM-DD
+    section Sprint 1: Dữ liệu & Schema
+    Mở rộng Schema & Seed 30+ Địa Điểm      :2026-10-12, 5d
+    Đồng bộ Mock Data Frontend              :2026-10-14, 3d
+    section Sprint 2: Thuật toán & API
+    Nâng cấp REST API Lọc Địa Điểm          :2026-10-15, 3d
+    Thuật toán Đề xuất Lộ trình & API       :2026-10-16, 6d
+    API Đổi Chặng Đơn Lẻ (Reroll)          :2026-10-20, 3d
+    section Sprint 3: Giao diện & Bản đồ
+    Tab lọc Cấp 1 & Marker Bản đồ           :2026-10-17, 4d
+    Giao diện Setup & Timeline Lộ trình     :2026-10-20, 6d
+    Vẽ Tuyến Đường Leaflet Polyline         :2026-10-23, 4d
+    section Sprint 4: Quản trị, QA & Báo Cáo
+    Admin CMS & Thống kê Mở rộng            :2026-10-24, 5d
+    Kiểm thử Thuật toán GPS & Mobile        :2026-10-26, 5d
+    Tài liệu kỹ thuật, Slide & Demo đồ án   :2026-10-29, 5d
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        LỘ TRÌNH PHÁT TRIỂN FOOD FINDER                 │
-└────────────────────────────────────────────────────────────────────────┘
-  Giai đoạn 1: Ổn định & Kiểm thử toàn diện (Testing & Stability)
-       │
-  Giai đoạn 2: Kết nối dữ liệu & Tính năng tương tác (Feature Completion)
-       │
-  Giai đoạn 3: Nâng cao trải nghiệm & Tối ưu di động (UX & PWA)
-       │
-  Giai đoạn 4: Hoàn thiện báo cáo, Triển khai & Đóng gói (Deployment)
-```
 
-### 🎯 Giai đoạn 1: Ổn định & Kiểm thử toàn diện (Testing & Stability)
-* [ ] **1.1. Kiểm thử môi trường cơ sở dữ liệu**:
-  * Kiểm tra tính toàn vẹn của dữ liệu mẫu (`seed_restaurants.sql`, `seed_categories.sql`).
-  * Xác thực toạ độ các quán ăn trên Google Maps đảm bảo tính chuẩn xác khi điều hướng.
-* [ ] **1.2. Kiểm thử bảo mật & API**:
-  * Kiểm tra các kịch bản SQL Injection, XSS, upload file độc hại vào thư mục uploads.
-  * Kiểm tra cơ chế Rate-limit trên API random và Brute-force block trên trang đăng nhập Admin.
-* [ ] **1.3. Kiểm thử tương thích đa nền tảng**:
-  * Kiểm tra hiển thị responsive trên các kích thước màn hình: Mobile (iPhone, Android), Tablet, Desktop.
-  * Kiểm tra hành vi Geolocation khi người dùng cho phép / từ chối cấp quyền vị trí.
+---
 
-### 🚀 Giai đoạn 2: Kết nối dữ liệu & Tính năng tương tác (Feature Completion)
-* [ ] **2.1. Hoàn thiện luồng Gửi Đánh giá (Review Submission)**:
-  * Tạo endpoint API `POST /api/review.php` cho phép thực khách gửi bình luận và chấm điểm sao từ trang chi tiết `restaurant.html`.
-  * Tự động tính toán lại `rating` và `rating_count` trung bình của quán sau khi đánh giá được duyệt trong Admin.
-* [ ] **2.2. Hoàn thiện luồng Đề xuất Quán mới (`suggest.html`)**:
-  * Tạo API lưu thông tin quán đề xuất từ form cộng đồng vào hàng đợi duyệt (Pending Approval) trong Admin CMS.
-  * Bổ sung mục "Quán ăn chờ duyệt" trong Admin Dashboard.
-* [ ] **2.3. Bổ sung bộ lọc khoảng cách thời gian thực**:
-  * Tự động tính khoảng cách từ vị trí người dùng đến từng quán ăn hiển thị trực tiếp trên danh sách thẻ và popup bản đồ.
+## 6. MA TRẬN PHÂN CÔNG VAI TRÒ (RACI MATRIX)
 
-### 💎 Giai đoạn 3: Nâng cao trải nghiệm người dùng & PWA (Advanced UX & PWA)
-* [ ] **3.1. Hỗ trợ Progressive Web App (PWA)**:
-  * Thêm `manifest.json` và Service Worker cơ bản để ứng dụng có thể "Cài đặt vào màn hình chính" (Add to Home Screen) trên điện thoại như một app native.
-  * Cache các tài nguyên tĩnh (CSS, JS, Fonts, SVG Icons) để khởi động tức thì.
-* [ ] **3.2. Tính năng dẫn đường trực tiếp trên bản đồ (In-app Route Navigation)**:
-  * Tích hợp chỉ đường tuyến đường ngắn nhất từ vị trí người dùng tới quán ăn ngay trên nền Leaflet (sử dụng OSRM API miễn phí) bên cạnh nút mở Google Maps ngoài.
-* [ ] **3.3. Chia sẻ vị trí & Quán ăn**:
-  * Tạo mã QR Code cho từng quán ăn để quét nhanh trên thiết bị di động.
+| STT | Hạng Mục Công Việc | Team Leader | Frontend Dev | Backend Dev | QA & Data Lead |
+| :---: | :--- | :---: | :---: | :---: | :---: |
+| 1 | Mở rộng CSDL & Dữ liệu 30+ điểm du lịch/vui chơi | **A** | I | **R** | **R** |
+| 2 | Thuật toán Đề xuất Lộ trình & Backend API | **A** | C | **R** | C |
+| 3 | Giao diện Timeline & Thiết lập Lộ trình | **A** | **R** | C | I |
+| 4 | Vẽ tuyến đường Leaflet Polyline & Google Maps Multi-stop | **A** | **R** | C | I |
+| 5 | Bộ lọc danh mục cấp 1 & Marker bản đồ tùy biến | **A** | **R** | C | I |
+| 6 | Admin CMS Quản trị địa điểm mở rộng | **A** | C | **R** | I |
+| 7 | Kiểm thử Thuật toán GPS & Responsive Mobile | **A** | C | C | **R** |
+| 8 | Báo cáo đồ án, Slide thuyết trình & Video demo | **R** | C | C | **R** |
 
-### 📦 Giai đoạn 4: Hoàn thiện báo cáo, Đóng gói & Triển khai (Finalization & Deployment)
-* [ ] **4.1. Tối ưu SEO & Hiệu năng**:
-  * Tối ưu hóa ảnh WebP, nén asset CSS/JS.
-  * Bổ sung thẻ Open Graph (OG Tag) và Twitter Card để chia sẻ trên Facebook/Zalo đẹp mắt.
-* [ ] **4.2. Cấu hình triển khai Web Server**:
-  * Cung cấp file cấu hình Apache VirtualHost hoặc Nginx template hoàn chỉnh.
-  * Cấu hình phân quyền thư mục `uploads/` ngăn chặn thực thi PHP.
-* [ ] **4.3. Báo cáo & Tài liệu đồ án**:
-  * Hoàn thiện tài liệu kiến trúc hệ thống, sơ đồ quan hệ thực thể ERD, sơ đồ use-case và hướng dẫn cài đặt.
+*(Ghi chú: **R** = Responsible - Người trực tiếp thực hiện; **A** = Accountable - Người chịu trách nhiệm chính; **C** = Consulted - Người được tham vấn ý kiến; **I** = Informed - Người nhận thông tin).*
