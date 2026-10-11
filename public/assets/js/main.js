@@ -333,4 +333,6 @@ function bindEvents() {
 }
 
 // ══════════════ START ══════════════
-bootstrap();
+bootstrap().catch(err => {
+  console.error('[FoodFinder] Lỗi khởi động ứng dụng:', err);
+});

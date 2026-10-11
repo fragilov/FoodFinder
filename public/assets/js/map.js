@@ -6,8 +6,6 @@ import { CONFIG } from './config.js';
 import { formatDistance, formatPrice, escapeText, isOpenNow, formatTime, getDirectionsUrl } from './format.js';
 import { categoryIcon } from './icons.js';
 
-export { getDirectionsUrl };
-
 let map = null;
 let tileLayer = null;
 let userMarker = null;
@@ -24,6 +22,29 @@ let onUserDrag = null;
 export function initMap(containerId, { lat, lng, zoom, isDark, onMarkerSelect, onUserPositionChange }) {
   onMarkerClick = onMarkerSelect;
   onUserDrag = onUserPositionChange;
+
+  if (typeof L === 'undefined') {
+    console.error('[FoodFinder] Thư viện Leaflet chưa được tải.');
+    return null;
+  }
+
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.error(`[FoodFinder] Không tìm thấy phần tử #${containerId}`);
+    return null;
+  }
+
+  if (map) {
+    try {
+      map.remove();
+    } catch (e) {
+      console.warn('Map cleanup error:', e);
+    }
+    map = null;
+    userMarker = null;
+    markerGroup = null;
+    markers.clear();
+  }
 
   map = L.map(containerId, {
     center: [lat, lng],
@@ -80,6 +101,7 @@ export function initMap(containerId, { lat, lng, zoom, isDark, onMarkerSelect, o
  * Đặt/cập nhật marker người dùng (kéo thả được)
  */
 export function setUserMarker(lat, lng) {
+  if (!map || typeof L === 'undefined') return;
   const icon = L.divIcon({
     className: '',
     html: '<div class="marker-user"></div>',
@@ -108,6 +130,7 @@ export function setUserMarker(lat, lng) {
  * Render markers cho danh sách quán
  */
 export function renderMarkers(restaurants, selectedId = null) {
+  if (!map || !markerGroup || typeof L === 'undefined') return;
   markerGroup.clearLayers();
   markers.clear();
 
@@ -213,7 +236,7 @@ function showPopup(marker, restaurant) {
   const dirBtn = document.createElement('a');
   dirBtn.className = 'btn btn--primary btn--sm';
   dirBtn.textContent = 'Chỉ đường';
-  dirBtn.href = directionsUrl(restaurant);
+  dirBtn.href = getDirectionsUrl(restaurant);
   dirBtn.target = '_blank';
   dirBtn.rel = 'noopener noreferrer';
   actions.appendChild(dirBtn);
@@ -224,13 +247,6 @@ function showPopup(marker, restaurant) {
   container.appendChild(actions);
 
   marker.bindPopup(container, { maxWidth: 280, minWidth: 200 }).openPopup();
-}
-
-/**
- * Tạo URL chỉ đường (Google Maps / Apple Maps)
- */
-function directionsUrl(restaurant) {
-  return getDirectionsUrl(restaurant);
 }
 
 /**
@@ -311,4 +327,4 @@ export function getMap() {
 /**
  * Lấy directions URL (export cho random card)
  */
-export { directionsUrl as getDirectionsUrl };
+export { getDirectionsUrl };
