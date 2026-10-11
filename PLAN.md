@@ -67,6 +67,7 @@ Toàn bộ kế hoạch phân công công việc đã được cấu trúc thàn
 
 ---
 
+<<<<<<< HEAD
 ## 4. CHI TIẾT BẢNG PHÂN CÔNG TASK (TASK BREAKDOWN)
 
 | Mã Task | Phân Hệ | Tên Công Việc | Mô Tả & Tiêu Chí Nghiệm Thu | Độ Ưu Tiên | Trạng Thái | Hạn Chót |
@@ -134,3 +135,181 @@ gantt
 | 8 | Báo cáo đồ án, Slide thuyết trình & Video demo | **R** | C | C | **R** |
 
 *(Ghi chú: **R** = Responsible - Người trực tiếp thực hiện; **A** = Accountable - Người chịu trách nhiệm chính; **C** = Consulted - Người được tham vấn ý kiến; **I** = Informed - Người nhận thông tin).*
+
+---
+
+## 7. BẢN ĐỒ KIẾN THỨC CẦN BIẾT ĐỂ LÀM CHỦ (CONTROL) DỰ ÁN NÀY 🧠
+
+Để tự tin kiểm soát 100%, bảo trì, sửa lỗi và phát triển thêm bất kỳ tính năng nào cho Food Finder, bạn cần trang bị và nắm vững các khối kiến thức sau:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                    KHUNG KIẾN THỨC ĐỂ LÀM CHỦ DỰ ÁN FOOD FINDER                 │
+├────────────────────────┬────────────────────────┬───────────────────────────────┤
+│    1. FRONTEND STACK   │    2. BACKEND & API    │    3. DATABASE & THUẬT TOÁN   │
+├────────────────────────┼────────────────────────┼───────────────────────────────┤
+│ • ES6+ & ES Modules    │ • PHP 8.1+ Strict Types│ • MySQL / MariaDB (PDO)       │
+│ • Leaflet.js & Clusters│ • RESTful API Design   │ • Haversine & Bounding Box    │
+│ • Geolocation & Storage│ • Bảo mật: CSRF, Auth  │ • Weighted Random Sampling    │
+│ • CSS Tokens & Layout  │ • Upload MIME Check    │ • Quan hệ 1-N, Index tối ưu   │
+└────────────────────────┴────────────────────────┴───────────────────────────────┘
+```
+
+---
+
+### 4.1. Kiến thức Frontend (Web Client)
+1. **JavaScript Hiện đại (ES6+ & ES Modules)**:
+   * **Cú pháp module**: Hiểu cách các file kết nối qua `import { ... } from './file.js'` và `export`.
+   * **Bất đồng bộ (Async/Await & Fetch API)**: Cách ứng dụng gửi yêu cầu lấy dữ liệu từ Backend (`api.js`).
+   * **Cơ chế AbortController**: Hiểu cách ứng dụng hủy bỏ request tìm kiếm cũ khi người dùng gõ từ khóa liên tục, tránh giật lag hoặc phản hồi bị ghi đè.
+   * **Xử lý DOM & Sự kiện (Events)**: Bắt sự kiện lọc (Filter), kéo vuốt Bottom Sheet (`sheet.js`), chuyển tab và hiển thị modal.
+2. **Bản đồ số & Không gian Địa lý (Leaflet.js)**:
+   * **Khởi tạo bản đồ**: `L.map()`, gán tọa độ tâm và mức zoom (`map.js`).
+   * **Đánh dấu (Markers) & Cụm địa điểm (MarkerCluster)**: Tạo icon tùy chỉnh (`L.divIcon`), gán tooltip, popup và gom cụm khi zoom xa.
+   * **Định vị Geolocation**: Cách dùng `navigator.geolocation.getCurrentPosition()` để lấy GPS thiết bị và cơ chế ghim vị trí mặc định nếu người dùng từ chối cấp quyền.
+3. **Quản lý Trạng thái cục bộ (State Management & Storage)**:
+   * **LocalStorage**: Lưu danh sách quán yêu thích (`favorites`) và chế độ nền Giao diện Tối/Sáng (`food-finder-theme`).
+   * **URLSearchParams**: Đọc và ghi tham số trên thanh địa chỉ (ví dụ: `restaurant.html?id=5`) để chia sẻ liên kết trực tiếp.
+4. **CSS Hiện đại & Hệ thống Giao diện (Design System)**:
+   * **CSS Custom Properties (Variables)**: Quản lý toàn bộ màu sắc, khoảng cách, bo góc qua biến CSS trong `tokens.css`.
+   * **Phong cách Neo-Brutalism + Glassmorphism**: Nắm rõ cách tạo viền đậm, đổ bóng cứng (`box-shadow: 4px 4px 0 #000`) kết hợp mờ kính đục (`backdrop-filter: blur()`).
+   * **Responsive Design**: Kỹ thuật Flexbox & Grid, CSS Media Queries thích ứng từ điện thoại đến máy tính.
+
+---
+
+### 4.2. Kiến thức Backend (PHP 8.1+)
+1. **PHP Cốt lõi & Kiểu dữ liệu chặt chẽ (Strict Types)**:
+   * Khai báo `declare(strict_types=1);` đảm bảo mọi tham số truyền vào hàm phải đúng kiểu dữ liệu (tránh lỗi ngầm).
+   * Khối cấu trúc PHP 8+: Match expressions, typed parameters, arrow functions.
+2. **Làm việc với Cơ sở dữ liệu qua PDO (PHP Data Objects)**:
+   * Sử dụng **Prepared Statements** (`$stmt->prepare()` và `$stmt->bindValue()`) để loại bỏ 100% nguy cơ tấn công SQL Injection.
+   * Cơ chế quản lý kết nối Singleton/Helper qua `app/db.php`.
+3. **Thiết kế RESTful API**:
+   * Chuẩn hóa cấu trúc JSON trả về qua `app/response.php`: luôn có `{ success: true, data: [...] }` hoặc `{ success: false, error: { code, message } }`.
+   * Nhận biết và phản hồi đúng HTTP Status Code (200 OK, 400 Bad Request, 404 Not Found, 429 Too Many Requests, 500 Server Error).
+4. **Bảo mật Web Ứng dụng**:
+   * **Session Security**: Cấu hình phiên làm việc an toàn (`cookie_httponly`, `cookie_samesite=Lax`).
+   * **Phòng chống CSRF**: Sinh và kiểm tra CSRF token ngẫu nhiên `bin2hex(random_bytes(32))` ở mọi form sửa đổi dữ liệu (`app/csrf.php`).
+   * **Phòng chống Brute-Force**: Giới hạn số lần đăng nhập sai theo IP khách truy cập bằng cách chuyển đổi IP sang nhị phân (`inet_pton`) và khóa tạm trong 15 phút.
+   * **Xác thực Mật khẩu**: Cơ chế băm một chiều an toàn với `password_hash($pass, PASSWORD_DEFAULT)` và `password_verify()`.
+   * **Upload Tệp an toàn**: Sử dụng tiện ích PHP `finfo` để kiểm tra MIME Type thực tế của tệp ảnh (chống hacker đổi đuôi file `.php` thành `.jpg`).
+
+---
+
+### 4.3. Kiến thức Database & Thuật toán
+1. **Cơ sở dữ liệu MySQL / MariaDB**:
+   * Thiết kế chuẩn hóa quan hệ 1-N (1 Quán có nhiều Ảnh chi tiết qua `restaurant_images`).
+   * Kỹ thuật đánh chỉ mục (Index): Chỉ mục địa lý kép `idx_geo (latitude, longitude)`, chỉ mục tìm kiếm toàn văn `FULLTEXT KEY ft_name_address`.
+   * Khóa ngoại kèm ràng buộc toàn vẹn `ON DELETE CASCADE`.
+2. **Toán học Không gian Địa lý (Geospatial Math)**:
+   * **Bounding Box (`app/geo.php`)**: Lọc phạm vi hình chữ nhật nhỏ trước trong mệnh đề `WHERE` để giảm 95% số bản ghi cần quét.
+   * **Công thức Haversine (`app/restaurant_query.php`)**: Tính khoảng cách cung tròn trên mặt cầu Trái Đất chính xác đến từng mét và lọc qua mệnh đề `HAVING distance_km <= :radius`.
+3. **Thuật toán Gợi ý ngẫu nhiên có trọng số (Weighted Random Sampling)**:
+   * Thay vì chọn ngẫu nhiên đồng đều, hệ thống áp dụng hàm trọng số:
+     $$W = \left(0.3 + \frac{\text{rating}}{5}\right) \times e^{-\frac{\text{distance}}{1.5}}$$
+   * Quán nào vừa có điểm đánh giá cao vừa ở cự ly gần sẽ có cơ hội được trúng cao hơn rõ rệt.
+
+---
+
+### 4.4. Kiến thức Vận hành & Môi trường Chạy
+1. **Môi trường Web Server**:
+   * Cách chạy nhanh qua **PHP Built-in Server** (`php -S localhost:8000 -t public`).
+   * Cách chạy qua **XAMPP / WampServer** (Apache + MySQL).
+2. **Quy tắc phân vùng thư mục an toàn**:
+   * Đặt Document Root tại thư mục `public/`.
+   * Thư mục `app/` và `database/` nằm ngoài Document Root để không ai có thể xem trộm mã nguồn PHP cấu hình DB từ URL trình duyệt.
+3. **Quản lý phiên bản Git**:
+   * Quy chuẩn commit và push tự động sau mỗi lần sửa đổi code theo hướng dẫn trong `AGENTS.md`.
+
+---
+
+## 8. HƯỚNG DẪN KIỂM SOÁT TỪNG MODULE: "MUỐN SỬA X THÌ VÀO ĐÂU?" 🧭
+
+| Nhu cầu bạn muốn thay đổi | Các tệp mã nguồn bạn cần chỉnh sửa | Ghi chú kỹ thuật |
+| :--- | :--- | :--- |
+| **Đổi vị trí mặc định của bản đồ** (ví dụ chuyển từ TDTU Q7 sang Quận 1) | `public/assets/js/config.js`<br>`public/assets/js/geo.js` | Sửa giá trị `DEFAULT_LOCATION: { lat, lng }` |
+| **Đổi màu sắc chủ đạo, font chữ hoặc giao diện** | `public/assets/css/tokens.css`<br>`public/assets/css/brutal.css` | Tinh chỉnh các biến `--color-primary`, `--font-sans`, `--shadow-brutal` |
+| **Thêm trường mới cho quán ăn** (ví dụ: `has_wifi`, `has_parking`) | 1. `database/schema.sql` (thêm cột)<br>2. `app/restaurant_query.php` (thêm SELECT)<br>3. `public/admin/restaurant_form.php` (thêm ô nhập)<br>4. `public/admin/restaurant_save.php` (lưu DB)<br>5. `public/assets/js/mock-data.js` & `restaurant.js` (hiển thị) | Quy trình đầy đủ từ DB qua Backend ra Frontend |
+| **Thay đổi bán kính lọc hoặc mức giá** | `public/assets/js/filters.js`<br>`public/assets/js/config.js` | Điều chỉnh mảng `RADIUS_OPTIONS` hoặc `PRICE_LEVELS` |
+| **Sửa công thức chọn quán "Hôm nay ăn gì?"** | `app/geo.php`<br>`public/api/random.php`<br>`public/assets/js/random.js` | Điều chỉnh hệ số trọng số đánh giá hoặc khoảng cách |
+| **Thêm API mới (ví dụ API gửi đánh giá)** | 1. Tạo `public/api/ten_api.php`<br>2. Dùng `app/db.php` và `app/response.php`<br>3. Khai báo hàm gọi trong `public/assets/js/api.js` | Chuẩn hóa JSON trả về qua hàm `json_response()` |
+| **Đổi tài khoản đăng nhập Admin** | Chạy lại lệnh: `php database/create_admin.php` hoặc sửa bảng `admins` | Mật khẩu luôn phải mã hóa bằng `password_hash()` |
+
+---
+
+## 9. KẾ HOẠCH HÀNH ĐỘNG 7 NGÀY ĐỂ BẠN LÀM CHỦ 100% DỰ ÁN (7-DAY MASTERY PLAN) 📅
+
+Dưới đây là lộ trình bài bản giúp bạn làm chủ toàn bộ dự án từ con số 0:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│               LỘ TRÌNH 7 NGÀY LÀM CHỦ DỰ ÁN FOOD FINDER                │
+└────────────────────────────────────────────────────────────────────────┘
+  Ngày 1: Khởi động & Nắm bắt Kiến trúc
+     ↓
+  Ngày 2: Giải mã Frontend & Bản đồ tương tác
+     ↓
+  Ngày 3: Phân tích Backend PHP & REST API
+     ↓
+  Ngày 4: Làm chủ Cơ sở dữ liệu & Thuật toán Geo
+     ↓
+  Ngày 5: Quản trị Hệ thống Admin CMS & Bảo mật
+     ↓
+  Ngày 6: Thực hành chỉnh sửa & Thêm tính năng nhỏ
+     ↓
+  Ngày 7: Hoàn thiện tính năng lớn & Đóng gói triển khai
+```
+
+### 🗓️ Ngày 1: Khởi động & Nắm bắt Kiến trúc
+* [ ] Đọc kỹ file `README.md` và `PLAN.md`.
+* [ ] Chạy file `setup_database.bat` để nạp dữ liệu mẫu vào MySQL (kiểm tra bằng phpMyAdmin).
+* [ ] Nhấp đúp `start_server.bat` để chạy server PHP tại `http://localhost:8000`.
+* [ ] Trải nghiệm toàn bộ luồng người dùng: Tìm kiếm trên bản đồ `index.html`, mở bộ lọc, quay ngẫu nhiên "Hôm nay ăn gì?", xem chi tiết quán, lưu yêu thích.
+* [ ] Đăng nhập trang quản trị tại `http://localhost:8000/admin/` (`admin` / `Admin@123456`) và thử CRUD 1 quán ăn mới.
+
+### 🗓️ Ngày 2: Giải mã Frontend & Bản đồ tương tác
+* [ ] Mở `public/assets/js/config.js` để hiểu các thông số cấu hình mặc định (tọa độ GPS, bán kính, API base).
+* [ ] Phân tích `public/assets/js/api.js`: Hiểu cách hàm `fetchRestaurants()` tự động fallback sang `mock-data.js` khi CSDL tắt.
+* [ ] Phân tích `public/assets/js/map.js`: Xem cách khởi tạo Leaflet map, tạo ghim quán ăn, ghim vị trí người dùng và gom cụm bằng `markerClusterGroup`.
+* [ ] Phân tích `public/assets/js/sheet.js`: Tìm hiểu cơ chế vuốt chạm Bottom Sheet mượt mà trên thiết bị di động.
+
+### 🗓️ Ngày 3: Phân tích Backend PHP & REST API
+* [ ] Xem `app/db.php`: Cách tạo kết nối PDO với chuẩn UTF-8 và chế độ báo lỗi ngoại lệ.
+* [ ] Xem `app/response.php`: Cách tạo response JSON đồng nhất (`json_response`, `json_error`).
+* [ ] Xem `public/api/restaurants.php`: Điểm tiếp nhận request từ client, nhận query params và trả danh sách quán.
+* [ ] Thử test các API trực tiếp trên trình duyệt hoặc Postman:
+  * `http://localhost:8000/api/categories.php`
+  * `http://localhost:8000/api/restaurants.php?lat=10.7327&lng=106.6992&radius=2`
+  * `http://localhost:8000/api/random.php?lat=10.7327&lng=106.6992`
+
+### 🗓️ Ngày 4: Làm chủ Cơ sở dữ liệu & Thuật toán Geo
+* [ ] Đọc `database/schema.sql`: Nắm vững cấu trúc 6 bảng dữ liệu, quan hệ khóa ngoại `ON DELETE CASCADE` và các chỉ mục `INDEX`.
+* [ ] Phân tích `app/geo.php` và `app/restaurant_query.php`: Hiểu sâu sắc cách kết hợp **Bounding Box** và **công thức Haversine** trong SQL để tính toán cự ly thực tế cực nhanh.
+* [ ] Hiểu cách hệ thống kiểm tra trạng thái quán đang mở cửa (`open_now`) hỗ trợ cả quán mở xuyên đêm qua ngày hôm sau.
+
+### 🗓️ Ngày 5: Quản trị Hệ thống Admin CMS & Bảo mật
+* [ ] Phân tích `public/admin/_bootstrap.php`: Tìm hiểu cơ chế kiểm tra phiên đăng nhập (`auth_require_login()`) và bảo vệ chống tấn công CSRF.
+* [ ] Phân tích `app/auth.php`: Tìm hiểu cách ghi nhận IP vào bảng `login_attempts` để chặn brute-force sau 5 lần nhập sai.
+* [ ] Phân tích `app/upload.php` & `public/admin/restaurant_save.php`: Tìm hiểu quy trình tải ảnh lên an toàn (kiểm tra MIME type, đổi tên ngẫu nhiên chống file shell).
+
+### 🗓️ Ngày 6: Thực hành Tự chỉnh sửa & Tùy biến (Hands-on Practice)
+* [ ] **Bài tập thực hành 1**: Đổi vị trí mặc định của bản đồ sang địa chỉ trường học/khu phố quen thuộc của bạn.
+* [ ] **Bài tập thực hành 2**: Thêm 1 danh mục món ăn mới (ví dụ: "Trà sữa & Đồ uống") trong trang Admin và gán cho một số quán.
+* [ ] **Bài tập thực hành 3**: Tùy biến màu sắc giao diện trong `public/assets/css/tokens.css`.
+
+### 🗓️ Ngày 7: Hoàn thiện tính năng mở rộng & Đóng gói
+* [ ] Xây dựng endpoint API nhận đánh giá `POST /api/review.php` kết nối form đánh giá trên `restaurant.html`.
+* [ ] Kết nối biểu mẫu chia sẻ quán mới `suggest.html` với cơ sở dữ liệu.
+* [ ] Tích hợp tính năng Progressive Web App (PWA) để cài đặt ứng dụng lên màn hình điện thoại.
+* [ ] Kiểm tra lại toàn bộ hệ thống và thực hiện commit/push lên GitHub theo quy chuẩn.
+
+---
+
+## 10. KẾT LUẬN & ĐÁNH GIÁ TỔNG QUAN
+
+Dự án **Food Finder** được thiết kế với cấu trúc mã nguồn **rất sạch (clean architecture), module hóa cao và tuân thủ các tiêu chuẩn kỹ thuật hiện đại**:
+* **Không phụ thuộc framework nặng nề**: Chạy siêu nhanh, nhẹ và dễ hiểu từ gốc rễ.
+* **Cơ chế Fallback thông minh**: Có thể chạy độc lập ở chế độ Mock Data trên giao diện tĩnh hoặc chạy đầy đủ với cơ sở dữ liệu MySQL và REST API.
+* **Bảo mật và Hiệu năng được chú trọng**: Có đầy đủ CSRF, Session protection, brute-force guard, upload MIME check, SQL Prepared Statement và thuật toán tối ưu vị trí địa lý.
+
+Nắm vững tài liệu này và hoàn thành lộ trình 7 ngày, bạn sẽ hoàn toàn làm chủ hệ thống, sẵn sàng tự tin bảo vệ đồ án, phỏng vấn hoặc mở rộng ứng dụng thành một sản phẩm thương mại hoàn chỉnh.
