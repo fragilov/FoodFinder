@@ -6,7 +6,7 @@
 import { MOCK_RESTAURANTS, MOCK_CATEGORIES } from './mock-data.js';
 import { fetchRestaurants, fetchCategories } from './api.js';
 import { CONFIG } from './config.js';
-import { escapeText, formatPrice } from './format.js';
+import { escapeText, formatPrice, getDirectionsUrl } from './format.js';
 import { icon, categoryIcon, renderStars } from './icons.js';
 
 const STORAGE_KEY = 'food_finder_favorites';
@@ -165,7 +165,7 @@ async function initFavoritesPage() {
           </div>
           <div class="fav-card__actions">
             <a href="restaurant.html?id=${r.id}" class="btn btn--secondary btn--sm">Chi tiết</a>
-            <a href="https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}&travelmode=driving"
+            <a href="${getDirectionsUrl(r)}"
               target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
               ${icon('direction')} Chỉ đường
             </a>

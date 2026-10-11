@@ -5,7 +5,7 @@
 import { MOCK_RESTAURANTS } from './mock-data.js';
 import { fetchRestaurant } from './api.js';
 import { CONFIG } from './config.js';
-import { escapeText } from './format.js';
+import { escapeText, getDirectionsUrl } from './format.js';
 import { icon, categoryIcon, renderStars } from './icons.js';
 import { isFavorite, toggleFavorite } from './favorites.js';
 
@@ -92,11 +92,7 @@ document.getElementById('hero-badges').innerHTML = `
 `;
 
 // Action buttons
-const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
-const dirUrl = isApple
-  ? `https://maps.apple.com/?daddr=${r.lat},${r.lng}&dirflg=d`
-  : `https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}&travelmode=driving`;
-document.getElementById('btn-directions').href = dirUrl;
+document.getElementById('btn-directions').href = getDirectionsUrl(r);
 document.getElementById('btn-call').href = `tel:${encodeURIComponent(r.phone || '')}`;
 
 const btnFav = document.getElementById('btn-fav');

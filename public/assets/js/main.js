@@ -144,13 +144,7 @@ async function handleRandom() {
     const restaurant = await rollRandom(filters);
     if (restaurant) {
       showRandomCard(restaurant, {
-        getDirectionsUrl: (r) => {
-          const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
-          if (isApple) {
-            return `https://maps.apple.com/?daddr=${r.lat},${r.lng}&dirflg=d`;
-          }
-          return `https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}&travelmode=driving`;
-        },
+        getDirectionsUrl,
         onReroll: handleRandom,
         onClose: () => {},
       });

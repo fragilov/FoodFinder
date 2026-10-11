@@ -3,8 +3,10 @@
    ============================================================ */
 
 import { CONFIG } from './config.js';
-import { formatDistance, formatPrice, escapeText, isOpenNow, formatTime } from './format.js';
+import { formatDistance, formatPrice, escapeText, isOpenNow, formatTime, getDirectionsUrl } from './format.js';
 import { categoryIcon } from './icons.js';
+
+export { getDirectionsUrl };
 
 let map = null;
 let tileLayer = null;
@@ -228,11 +230,7 @@ function showPopup(marker, restaurant) {
  * Tạo URL chỉ đường (Google Maps / Apple Maps)
  */
 function directionsUrl(restaurant) {
-  const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
-  if (isApple) {
-    return `https://maps.apple.com/?daddr=${restaurant.lat},${restaurant.lng}&dirflg=d`;
-  }
-  return `https://www.google.com/maps/dir/?api=1&destination=${restaurant.lat},${restaurant.lng}&travelmode=driving`;
+  return getDirectionsUrl(restaurant);
 }
 
 /**

@@ -68,3 +68,18 @@ export function formatTime(timeStr) {
   const parts = timeStr.split(':');
   return `${parseInt(parts[0])}:${parts[1]}`;
 }
+
+/**
+ * Tạo URL chỉ đường (Google Maps / Apple Maps) ưu tiên địa chỉ và tên quán chính xác
+ */
+export function getDirectionsUrl(restaurant) {
+  if (!restaurant) return '#';
+  const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
+  const target = [restaurant.name, restaurant.address].filter(Boolean).join(', ');
+  const destQuery = encodeURIComponent(target.trim() || `${restaurant.lat},${restaurant.lng}`);
+
+  if (isApple) {
+    return `https://maps.apple.com/?daddr=${encodeURIComponent(restaurant.address || '')}&q=${encodeURIComponent(restaurant.name || '')}&dirflg=d`;
+  }
+  return `https://www.google.com/maps/dir/?api=1&destination=${destQuery}&travelmode=driving`;
+}
