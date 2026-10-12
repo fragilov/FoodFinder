@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 if (PHP_SAPI !== 'cli') exit("Run this script from the command line only.\n");
-require_once __DIR__ . '/../app/db.php';
+require_once __DIR__ . '/../app/bootstrap.php';
 function prompt(string $label): string { echo $label; return trim((string) fgets(STDIN)); }
 $username = prompt('Username: ');
 $displayName = prompt('Display name: ');

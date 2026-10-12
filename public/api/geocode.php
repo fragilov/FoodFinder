@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/../../app/auth.php';
-require_once __DIR__ . '/../../app/response.php';
-require_once __DIR__ . '/../../app/validate.php';
+require_once __DIR__ . '/../../app/bootstrap.php';
 
 api_guard(function (): void {
     start_secure_session(); $q = optional_text($_GET, 'q', 100);
@@ -24,4 +22,3 @@ api_guard(function (): void {
     $result = array_map(static fn(array $item): array => ['name' => (string) ($item['display_name'] ?? ''), 'lat' => (float) $item['lat'], 'lng' => (float) $item['lon']], $decoded);
     json_ok($result);
 });
-

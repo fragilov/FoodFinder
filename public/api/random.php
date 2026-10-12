@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/../../app/auth.php';
-require_once __DIR__ . '/../../app/response.php';
-require_once __DIR__ . '/../../app/validate.php';
-require_once __DIR__ . '/../../app/restaurant_query.php';
+require_once __DIR__ . '/../../app/bootstrap.php';
+require_once __DIR__ . '/../../app/services/restaurant_query.php';
 
 api_guard(function (): void {
     start_secure_session();
@@ -22,4 +20,3 @@ api_guard(function (): void {
     foreach ($pool as $index => $row) { $target -= $weights[$index]; if ($target <= 0) json_ok($row); }
     json_ok(end($pool));
 });
-

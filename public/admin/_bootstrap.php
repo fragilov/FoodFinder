@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/../../app/auth.php';
-require_once __DIR__ . '/../../app/csrf.php';
-require_once __DIR__ . '/../../app/db.php';
+require_once __DIR__ . '/../../app/bootstrap.php';
 
 function h(?string $value): string { return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 function admin_flash(?string $message = null, string $type = 'success'): ?array {

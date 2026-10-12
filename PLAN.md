@@ -3,7 +3,7 @@
 > **Dự án**: Food & Trip Finder — Nền tảng bản đồ thông minh tích hợp tìm kiếm quán ăn/uống, địa điểm du lịch, khu vui chơi và **Tự động đề xuất lộ trình đi chơi quanh vị trí người dùng**.  
 > **Khu vực dữ liệu mẫu**: Quanh Trường Đại học Tôn Đức Thắng (TDTU), Quận 7, TP. Hồ Chí Minh & các điểm du lịch tiêu biểu tại TP.HCM.  
 > **Cập nhật ngày**: 11/10/2026.  
-> **Tài liệu theo dõi công việc**: [`FoodFinder_Project_Plan.xlsx`](./FoodFinder_Project_Plan.xlsx) & [`FoodFinder_Project_Plan.csv`](./FoodFinder_Project_Plan.csv).
+> **Tài liệu theo dõi công việc**: [`FoodFinder_Project_Plan.xlsx`](./docs/plan_sheets/FoodFinder_Project_Plan.xlsx) & [`FoodFinder_Project_Plan.csv`](./docs/plan_sheets/FoodFinder_Project_Plan.csv).
 
 ---
 
@@ -56,8 +56,8 @@ Từ định hướng ban đầu chỉ tập trung vào ẩm thực, dự án đ
 ## 3. FILE KẾ HOẠCH GOOGLE SHEETS & TIẾN ĐỘ THỰC HIỆN
 
 Toàn bộ kế hoạch phân công công việc đã được cấu trúc thành trang tính chuyên nghiệp tại file:
-* 📁 **File Excel**: [`FoodFinder_Project_Plan.xlsx`](./FoodFinder_Project_Plan.xlsx) (Đầy đủ 4 Sheet, định dạng màu sắc Neo-Brutalism, Dropdown Data Validation và Công thức tự động).
-* 📁 **File CSV**: [`FoodFinder_Project_Plan.csv`](./FoodFinder_Project_Plan.csv) (Dùng import nhanh vào bất kỳ phần mềm bảng tính nào).
+* 📁 **File Excel**: [`FoodFinder_Project_Plan.xlsx`](./docs/plan_sheets/FoodFinder_Project_Plan.xlsx) (Đầy đủ 4 Sheet, định dạng màu sắc Neo-Brutalism, Dropdown Data Validation và Công thức tự động).
+* 📁 **File CSV**: [`FoodFinder_Project_Plan.csv`](./docs/plan_sheets/FoodFinder_Project_Plan.csv) (Dùng import nhanh vào bất kỳ phần mềm bảng tính nào).
 
 ### 3.1. Hướng Dẫn Tải Lên Google Sheets (Chỉ mất 5 giây)
 1. Mở trình duyệt và truy cập: **[sheets.new](https://sheets.new)** (tạo một Google Sheet trắng mới).

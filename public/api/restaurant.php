@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/../../app/db.php';
-require_once __DIR__ . '/../../app/response.php';
+require_once __DIR__ . '/../../app/bootstrap.php';
 
 api_guard(function (): void {
     $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
@@ -20,4 +19,3 @@ api_guard(function (): void {
     unset($row['category_id'], $row['category_name'], $row['category_slug'], $row['category_icon']);
     json_ok($row);
 });
-

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/_bootstrap.php'; require_once __DIR__ . '/../../app/upload.php'; require_admin();
+require_once __DIR__ . '/_bootstrap.php'; require_once __DIR__ . '/../../app/services/upload.php'; require_admin();
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); exit; } csrf_check($_POST['csrf'] ?? null);
 $id=filter_var($_POST['id'] ?? 0,FILTER_VALIDATE_INT,['options'=>['min_range'=>0]]) ?: 0;
 $old=$_POST; unset($old['csrf'],$old['id']); $_SESSION['form_old']=$old;

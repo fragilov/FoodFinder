@@ -48,21 +48,29 @@
 
 ```
 food-finder/
-├── app/                  # Mã nguồn backend PHP (xử lý dữ liệu, auth, geo, db)
+├── app/                  # Mã nguồn backend PHP (bảo mật, ngoài web root)
+│   ├── bootstrap.php     # File nạp trung tâm core & helpers
+│   ├── config.example.php# File cấu hình mẫu
+│   ├── core/             # Hạ tầng cốt lõi (db, auth, csrf, response)
+│   ├── services/         # Nghiệp vụ xử lý (geo, restaurant_query, upload)
+│   └── helpers/          # Hàm tiện ích (validate, format)
 ├── database/             # File schema SQL, seeds và script tạo admin
-├── public/               # Thư mục Web Root
+├── docs/                 # Tài liệu dự án, kế hoạch Google Sheets, preview mockup
+│   ├── plan_sheets/      # File Excel, CSV theo dõi tiến độ & script
+│   └── previews/         # Giao diện preview tĩnh của CMS Admin
+├── public/               # Thư mục Web Root (duy nhất công khai)
 │   ├── index.html        # Trang chủ ứng dụng
 │   ├── explore.html      # Bản đồ khám phá tương tác
 │   ├── suggest.html      # Tính năng "Hôm nay ăn gì?"
 │   ├── favorites.html    # Danh sách quán đã lưu
 │   ├── restaurant.html   # Chi tiết quán ăn
-│   ├── admin.html        # Trang quản trị
 │   ├── api/              # Các endpoint REST API
-│   ├── admin/            # Backend PHP cho module Admin
-│   ├── assets/           # CSS, JS, hình ảnh
+│   ├── admin/            # Backend & View cho module Admin
+│   ├── assets/           # CSS (Design Tokens), JS (ES Modules), hình ảnh
 │   └── uploads/          # Thư mục ảnh tải lên
 ├── setup_database.bat    # Script khởi tạo CSDL 1-click cho Windows
 ├── start_server.bat      # Script khởi chạy server 1-click cho Windows
+├── PLAN.md               # Kế hoạch phát triển đồ án chi tiết
 └── README.md
 ```
 
