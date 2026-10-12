@@ -67,7 +67,6 @@ Toàn bộ kế hoạch phân công công việc đã được cấu trúc thàn
 
 ---
 
-<<<<<<< HEAD
 ## 4. CHI TIẾT BẢNG PHÂN CÔNG TASK (TASK BREAKDOWN)
 
 | Mã Task | Phân Hệ | Tên Công Việc | Mô Tả & Tiêu Chí Nghiệm Thu | Độ Ưu Tiên | Trạng Thái | Hạn Chót |
